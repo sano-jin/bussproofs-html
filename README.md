@@ -6,6 +6,15 @@ Render proof tree in bussproofs into html
 
 右ラベル前提とする．
 
+## Memo
+
+How to build:
+
+```bash
+yarn build
+cp proof-tree/dist/index.js docs/assets/prooftree.js
+```
+
 ## 処理の流れ
 
 1. KaTeX を適用して，数式部分をレンダリングする．

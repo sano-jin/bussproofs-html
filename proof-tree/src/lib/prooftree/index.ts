@@ -16,7 +16,7 @@ export const renderProofTrees = () => {
     <HTMLCollectionOf<HTMLElement>>document.body.getElementsByTagName("P")
   );
   const nodes = nodeArray.filter((node) =>
-    node.innerText.includes("\\begin{prooftree}")
+    node.innerHTML.includes("\\begin{prooftree}")
   );
   console.log("nodes", nodes);
   console.log(nodes.map((node) => getPrtrFragment(node)));

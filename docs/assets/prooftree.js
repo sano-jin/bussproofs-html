@@ -1,10 +1,10 @@
-const V = "div.prooftree,div.prtr-proof-tree{width:fit-content;margin:20px auto}div.prtr-sequent{width:auto;text-align:center}div.prtr-premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.prtr-horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.prtr-horizontal-rule>.prtr-right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}", $ = () => {
+const V = "div.prooftree,div.prtr-proof-tree{width:fit-content;margin:20px auto}div.prtr-sequent{width:auto;text-align:center}div.prtr-premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.prtr-horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.prtr-horizontal-rule>.prtr-right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}", O = () => {
   const t = document.createElement("style");
   t.innerHTML = V, document.head.appendChild(t);
   const n = Array.from(
     document.body.getElementsByTagName("P")
   ).filter(
-    (o) => o.innerText.includes("\\begin{prooftree}")
+    (o) => o.innerHTML.includes("\\begin{prooftree}")
   );
   console.log("nodes", n), console.log(n.map((o) => w(o))), n.forEach((o) => L(o));
 }, L = (t) => {
@@ -289,5 +289,5 @@ const S = (t) => t.reduce((e, n) => e + n, 0), E = (t) => {
   });
 };
 export {
-  $ as renderProofTrees
+  O as renderProofTrees
 };
