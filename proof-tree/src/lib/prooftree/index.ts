@@ -53,7 +53,7 @@ const renderProofTree = (node: HTMLElement) => {
   node.removeChild(prtrFragment?.nodeList[0]);
 
   setTimeout(applyStyles, 0);
-  if (node.innerText.includes("\\begin{prooftree}")) {
+  if (node.innerHTML.includes("\\begin{prooftree}")) {
     renderProofTree(node);
   }
 };
