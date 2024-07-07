@@ -1,50 +1,52 @@
-const $ = () => {
-  const e = Array.from(
+const V = "div.prooftree,div.prtr-proof-tree{width:fit-content;margin:20px auto}div.prtr-sequent{width:auto;text-align:center}div.prtr-premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.prtr-horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.prtr-horizontal-rule>.prtr-right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}", $ = () => {
+  const t = document.createElement("style");
+  t.innerHTML = V, document.head.appendChild(t);
+  const n = Array.from(
     document.body.getElementsByTagName("P")
   ).filter(
-    (n) => n.innerText.includes("\\begin{prooftree}")
+    (o) => o.innerText.includes("\\begin{prooftree}")
   );
-  console.log("nodes", e), console.log(e.map((n) => w(n))), e.forEach((n) => L(n));
+  console.log("nodes", n), console.log(n.map((o) => w(o))), n.forEach((o) => L(o));
 }, L = (t) => {
   const e = w(t);
   if (!e) {
     console.log("cannot find fragment");
     return;
   }
-  const n = B(e);
+  const n = I(e);
   if (console.log(n), !n) {
     console.log("parsing error");
     return;
   }
-  const r = I(n);
-  if (!r) {
+  const o = v(n);
+  if (!o) {
     console.log("parsing error");
     return;
   }
-  e == null || e.nodeList.slice(1).forEach((o) => {
+  e == null || e.nodeList.slice(1).forEach((s) => {
     var i;
-    return (i = o.parentNode) == null ? void 0 : i.removeChild(o);
-  }), console.log(r);
-  const s = R(r);
-  t.insertBefore(e == null ? void 0 : e.beforeTextNode, e == null ? void 0 : e.nodeList[0]), t.insertBefore(s, e == null ? void 0 : e.nodeList[0]), t.insertBefore(e == null ? void 0 : e.afterTextNode, e == null ? void 0 : e.nodeList[0]), t.removeChild(e == null ? void 0 : e.nodeList[0]), setTimeout(W, 0), t.innerText.includes("\\begin{prooftree}") && L(t);
+    return (i = s.parentNode) == null ? void 0 : i.removeChild(s);
+  }), console.log(o);
+  const r = R(o);
+  t.insertBefore(e == null ? void 0 : e.beforeTextNode, e == null ? void 0 : e.nodeList[0]), t.insertBefore(r, e == null ? void 0 : e.nodeList[0]), t.insertBefore(e == null ? void 0 : e.afterTextNode, e == null ? void 0 : e.nodeList[0]), t.removeChild(e == null ? void 0 : e.nodeList[0]), setTimeout(W, 0), t.innerText.includes("\\begin{prooftree}") && L(t);
 }, b = (t, e) => {
-  let n = -1, r = -1;
+  let n = -1, o = -1;
   for (let l = 0; l < e.length; l++)
     if (e[l].nodeType === Node.TEXT_NODE) {
       const u = e[l].nodeValue.indexOf(t);
       if (u !== -1) {
-        console.log(t), r = l, n = u;
+        console.log(t), o = l, n = u;
         break;
       }
     }
   if (n === -1) return null;
-  const s = e[r].nodeValue, o = s.slice(0, n), i = s.slice(n + t.length), c = document.createTextNode(o), h = document.createTextNode(i);
-  return [r, c, h];
+  const r = e[o].nodeValue, s = r.slice(0, n), i = r.slice(n + t.length), c = document.createTextNode(s), h = document.createTextNode(i);
+  return [o, c, h];
 }, w = (t) => {
   const e = Array.from(t.childNodes), n = b("\\begin{prooftree}", e);
   if (n === null) return null;
-  const [r, s, o] = n, i = e.slice(r), c = [...i];
-  c.splice(0, 1, o);
+  const [o, r, s] = n, i = e.slice(o), c = [...i];
+  c.splice(0, 1, s);
   const h = b("\\end{prooftree}", c);
   if (h === null) return null;
   const [l, u, a] = h, d = i.slice(0, l + 1), m = c;
@@ -58,11 +60,11 @@ const $ = () => {
   ), p = {
     nodeList: d,
     prtrNodeList: f,
-    beforeTextNode: s,
+    beforeTextNode: r,
     afterTextNode: a
   };
   return console.log(p), p;
-}, V = (t) => {
+}, B = (t) => {
   t[0].nodeValue = t[0].nodeValue.trimStart();
 }, C = (t) => {
   const e = t[0].nodeValue.indexOf(`
@@ -75,10 +77,10 @@ const $ = () => {
       return C(t);
   return !1;
 }, g = (t, e) => {
-  const n = t[0].nodeValue, r = n.indexOf("}");
-  if (r !== -1) {
-    const s = document.createTextNode(n.slice(0, r));
-    return t[0].nodeValue = n.substring(r + 1), e.push(s), e;
+  const n = t[0].nodeValue, o = n.indexOf("}");
+  if (o !== -1) {
+    const r = document.createTextNode(n.slice(0, o));
+    return t[0].nodeValue = n.substring(o + 1), e.push(r), e;
   } else {
     for (e.push(t.shift()); t.length > 0; )
       if (t[0].nodeType !== Node.TEXT_NODE) e.push(t.shift());
@@ -86,44 +88,44 @@ const $ = () => {
         return g(t, e);
     return null;
   }
-}, B = (t) => {
+}, I = (t) => {
   const e = t.prtrNodeList;
-  let n = [], r = 20;
-  for (; e.length > 0 && r-- > 0 && (V(e), e.length !== 0); ) {
+  let n = [], o = 20;
+  for (; e.length > 0 && o-- > 0 && (B(e), e.length !== 0); ) {
     if (e[0].nodeType !== Node.TEXT_NODE) return null;
-    const s = e[0].nodeValue;
-    if (s.startsWith("%")) {
-      if (e[0].nodeValue = s.substring(1), console.log("consumeComments"), !C(e)) return null;
-    } else if (s.startsWith("\\AXC{")) {
-      e[0].nodeValue = s.substring(5);
-      const o = g(e, []);
-      if (o === null) return null;
-      n.push({ type: "AXC", body: o });
-    } else if (s.startsWith("\\UIC{")) {
-      e[0].nodeValue = s.substring(5);
-      const o = g(e, []);
-      if (o === null) return null;
-      n.push({ type: "UIC", body: o });
-    } else if (s.startsWith("\\BIC{")) {
-      e[0].nodeValue = s.substring(5);
-      const o = g(e, []);
-      if (o === null) return null;
-      n.push({ type: "BIC", body: o });
-    } else if (s.startsWith("\\TIC{")) {
-      e[0].nodeValue = s.substring(5);
-      const o = g(e, []);
-      if (o === null) return null;
-      n.push({ type: "TIC", body: o });
-    } else if (s.startsWith("\\QuaternaryInfC{")) {
-      e[0].nodeValue = s.substring(16);
-      const o = g(e, []);
-      if (o === null) return null;
-      n.push({ type: "QuaternaryInfC", body: o });
-    } else if (s.startsWith("\\RightLabel{")) {
-      e[0].nodeValue = s.substring(12);
-      const o = g(e, []);
-      if (o === null) return null;
-      n.push({ type: "RightLabel", body: o });
+    const r = e[0].nodeValue;
+    if (r.startsWith("%")) {
+      if (e[0].nodeValue = r.substring(1), console.log("consumeComments"), !C(e)) return null;
+    } else if (r.startsWith("\\AXC{")) {
+      e[0].nodeValue = r.substring(5);
+      const s = g(e, []);
+      if (s === null) return null;
+      n.push({ type: "AXC", body: s });
+    } else if (r.startsWith("\\UIC{")) {
+      e[0].nodeValue = r.substring(5);
+      const s = g(e, []);
+      if (s === null) return null;
+      n.push({ type: "UIC", body: s });
+    } else if (r.startsWith("\\BIC{")) {
+      e[0].nodeValue = r.substring(5);
+      const s = g(e, []);
+      if (s === null) return null;
+      n.push({ type: "BIC", body: s });
+    } else if (r.startsWith("\\TIC{")) {
+      e[0].nodeValue = r.substring(5);
+      const s = g(e, []);
+      if (s === null) return null;
+      n.push({ type: "TIC", body: s });
+    } else if (r.startsWith("\\QuaternaryInfC{")) {
+      e[0].nodeValue = r.substring(16);
+      const s = g(e, []);
+      if (s === null) return null;
+      n.push({ type: "QuaternaryInfC", body: s });
+    } else if (r.startsWith("\\RightLabel{")) {
+      e[0].nodeValue = r.substring(12);
+      const s = g(e, []);
+      if (s === null) return null;
+      n.push({ type: "RightLabel", body: s });
     } else if (e[0].nodeValue.length === 0)
       console.log("oghi"), e.shift();
     else
@@ -131,20 +133,20 @@ const $ = () => {
   }
   return console.log("reached"), n;
 }, T = (t, e, n) => {
-  const r = t[0];
-  if (!r) return null;
-  let s = [];
-  r.type === "RightLabel" && (t.shift(), s = r.body);
-  const o = [];
+  const o = t[0];
+  if (!o) return null;
+  let r = [];
+  o.type === "RightLabel" && (t.shift(), r = o.body);
+  const s = [];
   for (let i = 0; i < n; i++) {
     const c = N(t);
     if (!c) return null;
-    o.push(c);
+    s.push(c);
   }
   return {
     type: "Sequent",
-    premises: o.reverse(),
-    rightLabel: s,
+    premises: s.reverse(),
+    rightLabel: r,
     conclusion: e
   };
 }, N = (t) => {
@@ -163,12 +165,12 @@ const $ = () => {
       return T(t, e.body, 4);
   }
   return null;
-}, I = (t) => {
+}, v = (t) => {
   const e = N(t.reverse());
   return t.length > 0 ? null : e;
 }, y = (t, e) => {
   const n = document.createElement("div");
-  return n.classList.add("prtr-" + t), n.style.width = "max-content", e.forEach((r) => n.appendChild(r)), n;
+  return n.classList.add("prtr-" + t), n.style.width = "max-content", e.forEach((o) => n.appendChild(o)), n;
 }, P = (t) => {
   switch (t.type) {
     case "Axiom":
@@ -213,10 +215,10 @@ const S = (t) => t.reduce((e, n) => e + n, 0), E = (t) => {
       node: t
     };
   } else if (t.classList.contains("prtr-sequent")) {
-    const e = t.children[0], n = t.children[1], r = n.children[0], s = t.children[2], o = Array.prototype.slice.apply(e.children), i = s.children[0].offsetWidth + 20 * 2;
+    const e = t.children[0], n = t.children[1], o = n.children[0], r = t.children[2], s = Array.prototype.slice.apply(e.children), i = r.children[0].offsetWidth + 20 * 2;
     console.log("widthC", i);
-    const c = r.offsetWidth + 10, h = o.map(A), l = h.map((a) => a.prtrStyleAux);
-    o.length === 0 && console.log("error: empty premises", o);
+    const c = o.offsetWidth + 10, h = s.map(A), l = h.map((a) => a.prtrStyleAux);
+    s.length === 0 && console.log("error: empty premises", s);
     const u = S(l.map((a) => a.w)) + 20 * (l.length - 1) - l[0].mlc - l[l.length - 1].mrc;
     if (console.log("wpc", u), u > i) {
       const a = u, d = l[0].mlc, m = d + (u - i) / 2;
@@ -242,8 +244,8 @@ const S = (t) => t.reduce((e, n) => e + n, 0), E = (t) => {
         node: t,
         nodePremises: e,
         nodeHR: n,
-        nodeLabel: r,
-        nodeConclusion: s
+        nodeLabel: o,
+        nodeConclusion: r
       };
     } else {
       const a = i, d = Math.max(l[0].mlc - (i - u) / 2, 0);
@@ -271,8 +273,8 @@ const S = (t) => t.reduce((e, n) => e + n, 0), E = (t) => {
         node: t,
         nodePremises: e,
         nodeHR: n,
-        nodeLabel: r,
-        nodeConclusion: s
+        nodeLabel: o,
+        nodeConclusion: r
       };
     }
   } else
