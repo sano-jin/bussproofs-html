@@ -1,4 +1,4 @@
-# proof-tree-renderer
+# bussproofs-html
 
 Render proof tree in bussproofs into html
 
