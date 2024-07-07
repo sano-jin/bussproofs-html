@@ -1,2 +1,8 @@
-import "./style.css";
-import "./prooftree.ts";
+// import "./style.css";
+import { renderProofTrees } from "./prooftree.ts";
+
+export const render = renderProofTrees;
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   renderProofTrees();
+// });

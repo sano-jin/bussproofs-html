@@ -1,5 +1,10 @@
 import "./prooftree.css";
-document.addEventListener("DOMContentLoaded", function () {
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   renderProofTrees();
+// });
+
+export const renderProofTrees = () => {
   const nodeArray = Array.from(
     <HTMLCollectionOf<HTMLElement>>document.body.getElementsByTagName("P")
   );
@@ -10,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log(nodes.map((node) => getPrtrFragment(node)));
 
   nodes.forEach((node) => renderProofTree(node));
-});
+};
 
 const renderProofTree = (node: HTMLElement) => {
   const prtrFragment = getPrtrFragment(node);
