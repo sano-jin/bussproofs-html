@@ -14,7 +14,8 @@ Only RightLabels can be used for now.
 
 I forked [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
 and integrated this rendering engine.
-If you using Lazy as a plugin manager,
+[Here](https://github.com/sano-jin/markdown-preview.nvim) is the forked previewer.
+If you are using Lazy as a plugin manager,
 you can use the previewer as follows:
 
 ```lua
