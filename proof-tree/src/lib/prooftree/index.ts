@@ -1,13 +1,19 @@
-import "./prooftree.css";
+// import "./prooftree.css";
 
-// document.addEventListener("DOMContentLoaded", function () {
-//   renderProofTrees();
-// });
+console.log("ProofTree v0.0.1");
 
 const style =
   "div.prooftree,div.prtr-proof-tree{width:fit-content;margin:20px auto}div.prtr-sequent{width:auto;text-align:center}div.prtr-premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.prtr-horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.prtr-horizontal-rule>.prtr-right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}";
 
+export const renderProofTreesOnLoad = () => {
+  console.log("renderProofTreesOnLoad");
+  document.addEventListener("DOMContentLoaded", function () {
+    renderProofTrees();
+  });
+};
+
 export const renderProofTrees = () => {
+  console.log("renderProofTrees");
   const styleElem = document.createElement("style");
   styleElem.innerHTML = style;
   document.head.appendChild(styleElem);
@@ -15,10 +21,11 @@ export const renderProofTrees = () => {
   const nodeArray = Array.from(
     <HTMLCollectionOf<HTMLElement>>document.body.getElementsByTagName("P")
   );
+  console.log("nodes with tag P", nodeArray);
   const nodes = nodeArray.filter((node) =>
     node.innerHTML.includes("\\begin{prooftree}")
   );
-  console.log("nodes", nodes);
+  console.log("filtered nodes", nodes);
   console.log(nodes.map((node) => getPrtrFragment(node)));
 
   nodes.forEach((node) => renderProofTree(node));
