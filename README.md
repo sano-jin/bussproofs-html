@@ -2,7 +2,7 @@
 
 Render proof tree in bussproofs into html
 
-<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">証明木レンダリング，<br>neovim markdown preview へのインテグレーションもできた．<br><br>これでマークダウンのメモに証明木も書ける．<br>marp を使えばそのままスライドにもできる．<br>beamer としばしお別れかも．<br><br>来週はリファクタ予定． <a href="https://t.co/aHRCLUAnP6">pic.twitter.com/aHRCLUAnP6</a></p>&mdash; sano (@sano_jn) <a href="https://twitter.com/sano_jn/status/1809952552542429239?ref_src=twsrc%5Etfw">July 7, 2024</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+![](./nvim-preview.gif)
 
 ## Preliminary
 
