@@ -15,7 +15,7 @@ Only RightLabels can be used for now.
 I forked [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
 and integrated this rendering engine.
 [Here](https://github.com/sano-jin/markdown-preview.nvim) is the forked previewer.
-If you are using Lazy as a plugin manager,
+If you are using [Lazy](https://github.com/folke/lazy.nvim) as a plugin manager,
 you can use the previewer as follows:
 
 ```lua
@@ -26,11 +26,12 @@ you can use the previewer as follows:
     build = "cd app && yarn install",
     init = function()
       vim.g.mkdp_filetypes = { "markdown" }
-      vim.g.mkdp_markdown_css = '/Users/sano/work/config/style/markdown.css'
     end,
     ft = { "markdown" },
   },
 ```
+
+![](./nvim-preview.gif)
 
 ### Marp
 
@@ -39,28 +40,21 @@ You can use this engine by adding a script tag as follows:
 ```markdown
 ---
 marp: true
-footer: Powered by Aqua / Marp
-paginate: true
-headingDivider: 1
-theme: aqua
 math: katex
+paginate: true
+footer: https://github.com/sano-jin/busproofs-html
 ---
 
-# Page Title
+# Integration with Marp is easy!
 
 Here comes a proof tree:
 \begin{prooftree}
-\AXC{$1 + 2 + 3 + 4 + 5$}
-\RightLabel{Label 1}
-\UIC{$1 + 2 + 3$}
 \AXC{$1 + 2$}
-\RightLabel{Long Label 2}
-\UIC{$1 + 2 + 3$}
-\RightLabel{Label 3}
+\AXC{$1 + 2 + 3$}
 \BIC{$1 + 2$}
-\AXC{$1 + 2$}
-\RightLabel{Label 4}
-\BIC{$1 + 2 + 3 + 4 + 5$}
+\AXC{$1 + 2 + 3$}
+\RightLabel{Label}
+\BIC{$1 + 2 + 3 + 4$}
 \end{prooftree}
 
 <script type="module">
@@ -68,6 +62,11 @@ Here comes a proof tree:
   window.addEventListener('load', function() { renderProofTrees() });
 </script>
 ```
+
+![](./demo/marp-sample-0.png)
+
+- markdown: [demo/marp-sample.md](./demo/marp-sample.md)
+- output pdf: [demo/marp-sample.pdf](./demo/marp-sample.pdf)
 
 ### HTML
 
@@ -82,11 +81,14 @@ You can use this engine by adding a script tag as follows:
 </script>
 ```
 
+- html source: [demo/sample.html](./demo/sample.html)
+- deployed page: https://sano-jin.github.io/busproofs-html/sample.html
+
 ### VSCode
 
 I'm not familiar with VSCode so I have not yet considered any integration plan.
 
-## For Developpers: How to build
+## For Developpers: How To Build
 
 ```bash
 cd proof-tree
