@@ -1,14 +1,38 @@
 # bussproofs-html
 
-Render proof tree in bussproofs into html
+A JavaScript engine to render bussproofs style proof tree in html.
+
+github: [sano-jin/busproofs-html](https://github.com/sano-jin/busproofs-html)
 
 ![](./nvim-preview.gif)
 
 ## Preliminary
 
-Only RightLabels can be used for now.
+- Only `\RightLabel` can be used for a label for now.
+- Only proof trees directly under `p` elements are rendered.
+- `\AXC`, `\UIC`, `\BIC`, `\TIC`, and `\QuaternaryInfC` are allowed
+  as a constcutor of the node of a proof tree.
+  No other LaTeX commands are allowed.
+
+Send me PRs if you enable others.
 
 ## How to use:
+
+### HTML
+
+You can use this engine by adding a script tag as follows:
+
+```html
+<script type="module">
+  import { renderProofTrees } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  window.addEventListener("load", function () {
+    renderProofTrees();
+  });
+</script>
+```
+
+- html source: [demo/sample.html](https://github.com/sano-jin/busproofs-html/tree/master/demo/sample.html)
+- deployed page: https://sano-jin.github.io/busproofs-html/sample.html
 
 ### markdown-preview.nvim
 
@@ -68,27 +92,21 @@ Here comes a proof tree:
 - markdown: [marp-sample.md](https://github.com/sano-jin/busproofs-html/tree/master/demo/marp-sample.md)
 - output pdf: [demo/marp-sample.pdf](https://github.com/sano-jin/busproofs-html/tree/master/demo/marp-sample.pdf)
 
-### HTML
-
-You can use this engine by adding a script tag as follows:
-
-```html
-<script type="module">
-  import { renderProofTrees } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
-  window.addEventListener("load", function () {
-    renderProofTrees();
-  });
-</script>
-```
-
-- html source: [demo/sample.html](https://github.com/sano-jin/busproofs-html/tree/master/demo/sample.html)
-- deployed page: https://sano-jin.github.io/busproofs-html/sample.html
-
 ### VSCode
 
 I'm not familiar with VSCode so I have not yet considered any integration plan.
 
-## For Developpers: How To Build
+## For developpers: how to build
+
+Develop:
+
+```bash
+cd proof-tree
+yarn dev
+# access the displayed url on your browser.
+```
+
+Deploy:
 
 ```bash
 cd proof-tree

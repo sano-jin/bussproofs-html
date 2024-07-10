@@ -21,12 +21,12 @@ export const renderProofTrees = () => {
   const nodeArray = Array.from(
     <HTMLCollectionOf<HTMLElement>>document.body.getElementsByTagName("P")
   );
-  console.log("nodes with tag P", nodeArray);
+  // console.log("nodes with tag P", nodeArray);
   const nodes = nodeArray.filter((node) =>
     node.innerHTML.includes("\\begin{prooftree}")
   );
-  console.log("filtered nodes", nodes);
-  console.log(nodes.map((node) => getPrtrFragment(node)));
+  // console.log("filtered nodes", nodes);
+  // console.log(nodes.map((node) => getPrtrFragment(node)));
 
   nodes.forEach((node) => renderProofTree(node));
 };
@@ -37,15 +37,14 @@ const renderProofTree = (node: HTMLElement) => {
     console.log("cannot find fragment");
     return;
   }
-  const ltxCommands = createLtxCommands(prtrFragment!);
-  console.log(ltxCommands);
+  const ltxCommands = createLtxCommands(prtrFragment);
   if (!ltxCommands) {
-    console.log("parsing error");
+    console.log("error: cannot recognise latex command");
     return;
   }
   const proofTree = parseProofTree(ltxCommands!);
   if (!proofTree) {
-    console.log("parsing error");
+    console.log("error: cannot construct proof tree");
     return;
   }
   prtrFragment?.nodeList
@@ -90,7 +89,7 @@ const searchBeginEnd = (
     if (nodes[i].nodeType === Node.TEXT_NODE) {
       const j = nodes[i].nodeValue!.indexOf(delimeter);
       if (j !== -1) {
-        console.log(delimeter);
+        // console.log(delimeter);
         iBeginPT = i;
         jiBeginPT = j;
         break;
@@ -161,7 +160,7 @@ const getPrtrFragment = (parentNode: HTMLElement): PrtrFragment | null => {
     beforeTextNode: beforeTextNode,
     afterTextNode: afterTextNode,
   };
-  console.log(result3);
+  // console.log(result3);
   return result3;
 };
 
@@ -235,7 +234,7 @@ const createLtxCommands = (prtrFragment: PrtrFragment): LtxCommand[] | null => {
     const text = nodes[0].nodeValue!;
     if (text.startsWith("%")) {
       nodes[0].nodeValue! = text.substring(1);
-      console.log("consumeComments");
+      // console.log("consumeComments");
       if (!consumeComments(nodes)) return null;
     } else if (text.startsWith("\\AXC{")) {
       nodes[0].nodeValue! = text.substring("\\AXC{".length);
@@ -268,14 +267,13 @@ const createLtxCommands = (prtrFragment: PrtrFragment): LtxCommand[] | null => {
       if (body === null) return null;
       ltxCommands.push({ type: "RightLabel", body: body });
     } else if (nodes[0].nodeValue!.length === 0) {
-      console.log("oghi");
+      console.log("no more chars");
       nodes.shift();
     } else {
-      console.log("error1", nodes[0].nodeValue);
+      console.log("error: unrecognised charactor", nodes[0].nodeValue);
       return null;
     }
   }
-  console.log("reached");
   return ltxCommands;
 };
 
@@ -372,7 +370,9 @@ const createPrtrDomHelper = (prtrDom: ProofTree): HTMLElement => {
 };
 
 const createPrtrDom = (prtrDom: ProofTree): HTMLElement => {
-  return div("proof-tree", [createPrtrDomHelper(prtrDom)]);
+  const pt = div("proof-tree", [createPrtrDomHelper(prtrDom)]);
+  pt.classList.add("unrendered");
+  return pt;
 };
 
 interface PrtrStyleAux {
@@ -422,7 +422,7 @@ const applyStylesToPrtr = (prtrStyle: PrtrStyle) => {
       return;
     }
     case "PSSequent": {
-      console.log(prtrStyle);
+      // console.log(prtrStyle);
 
       const d = prtrStyle.prtrStyleAux;
 
@@ -448,7 +448,7 @@ const applyStylesToPrtr = (prtrStyle: PrtrStyle) => {
 const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
   if (node.classList.contains("prtr-axiom")) {
     const width = node.offsetWidth + paddingLR * 2;
-    console.log("axiom", width);
+    // console.log("axiom", width);
     const prtrStyleAux = {
       w: width,
       whr: width,
@@ -475,7 +475,7 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
 
     const widthC =
       (nodeConclusion.children[0] as HTMLElement).offsetWidth + paddingLR * 2;
-    console.log("widthC", widthC);
+    // console.log("widthC", widthC);
     const widthL = nodeLabel.offsetWidth + marginLabelLeft;
 
     const pss = premises.map(getPrtrStyle);
@@ -491,7 +491,7 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
       marginPremises * (ps.length - 1) -
       ps[0].mlc -
       ps[ps.length - 1].mrc;
-    console.log("wpc", wpc);
+    // console.log("wpc", wpc);
 
     // $wpc(D) > width(C)$
     if (wpc > widthC) {
@@ -503,7 +503,7 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
 
       // $mlc(D) \triangleq mlhr(D) + \dfrac{wpc(D) - width(C)}{2}$
       const mlc = mlhr + (wpc - widthC) / 2;
-      console.log("mlc", mlc);
+      // console.log("mlc", mlc);
 
       // $mrhr(D) \triangleq \max(mrc(P_n), width(L))$
       const mrhr = Math.max(ps[ps.length - 1].mrc, widthL);
@@ -546,13 +546,13 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
       // $mlhr(D) \triangleq mlc(P_1) - \dfrac{width(C) - wpc(D)}{2}$
       // const mlhr2 = ps[0].mlc - (widthC - wpc) / 2;
       const mlhr = Math.max(ps[0].mlc - (widthC - wpc) / 2, 0);
-      console.log("mlc", mlhr);
+      // console.log("mlhr", mlhr);
 
       const mlp = Math.max((widthC - wpc) / 2 - ps[0].mlc, 0);
 
       // $mlc(D) \triangleq mlhr(D)$
       const mlc = mlhr;
-      console.log("mlc", mlc);
+      // console.log("mlc", mlc);
 
       // $mrhr(D) \triangleq
       // \max(mrc(P_n) - \dfrac{width(C) - wpc(D)}{2}, width(L))$
@@ -597,11 +597,12 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
 
 const applyStyles = () => {
   const prooftrees = Array.from(
-    document.getElementsByClassName("prtr-proof-tree")
+    document.getElementsByClassName("prtr-proof-tree unrendered")
   );
   console.log(prooftrees);
   prooftrees.forEach((pt) => {
     const prtrStyle = getPrtrStyle(pt.children[0]! as HTMLElement);
     applyStylesToPrtr(prtrStyle);
+    pt.classList.remove("unrendered");
   });
 };
