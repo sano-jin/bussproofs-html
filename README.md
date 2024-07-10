@@ -8,7 +8,7 @@ A JavaScript engine to render bussproofs style proof tree in html.
 
 - Only `\RightLabel` can be used for a label for now.
 - Only proof trees directly under `p` elements are rendered.
-- `\AXC`, `\UIC`, `\BIC`, `\TIC`, and `\QuaternaryInfC` are allowed
+- Only `\AXC`, `\UIC`, `\BIC`, `\TIC`, and `\QuaternaryInfC` are allowed
   as a constcutor of the node of a proof tree.
   No other LaTeX commands are allowed.
 
