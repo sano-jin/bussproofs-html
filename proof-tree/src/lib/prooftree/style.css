@@ -1,4 +1,5 @@
 div.bussproofs-html__proof-tree {
+  width: max-content;
   margin: 20px auto;
 }
 
