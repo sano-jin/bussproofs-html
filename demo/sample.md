@@ -7,10 +7,11 @@ neovim-markdown-preview:
 - second element.
 
 Here comes a proof tree:
+
 \begin{prooftree}
 \AXC{$1 + 2 + 3 + 4 + 5$}
 \RightLabel{Label 7}
-\UIC{$1 + 2 + 3$}
+\UIC{$1$}
 \RightLabel{Label 6}
 \UIC{$1 + 2 + 3$}
 \AXC{$1 + 2$}
@@ -22,3 +23,5 @@ Here comes a proof tree:
 \RightLabel{Label 4}
 \BIC{$1 + 2 + 3 + 4 + 5$}
 \end{prooftree}
+iage
+aiaiaia

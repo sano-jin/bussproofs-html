@@ -5,14 +5,14 @@ console.log("ProofTree v0.0.1");
 const BH = "bussproofs-html__";
 const style = `div.${BH}proof-tree{max-width:100%;margin:20px auto}div.${BH}sequent{width:auto;text-align:center}div.${BH}premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.${BH}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${BH}horizontal-rule>.${BH}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`;
 
-export const renderProofTreesOnLoad = () => {
+export const renderProofTreesOnLoad = (styleOnLoad: null | number = null) => {
   console.log("renderProofTreesOnLoad()");
   document.addEventListener("DOMContentLoaded", function () {
-    renderProofTrees();
+    renderProofTrees(styleOnLoad);
   });
 };
 
-export const renderProofTrees = () => {
+export const renderProofTrees = (styleOnLoad: null | number = null) => {
   console.log("renderProofTrees()");
   const styleElem = document.createElement("style");
   styleElem.innerHTML = style;
@@ -25,10 +25,10 @@ export const renderProofTrees = () => {
     node.innerHTML.includes("\\begin{prooftree}")
   );
 
-  nodes.forEach((node) => renderProofTree(node));
+  nodes.forEach((node) => renderProofTree(node, styleOnLoad));
 };
 
-const renderProofTree = (node: HTMLElement) => {
+const renderProofTree = (node: HTMLElement, styleOnLoad: null | number) => {
   try {
     const prtrFragment = getPrtrFragment(node);
     if (!prtrFragment) throw new Error("cannot find fragment");
@@ -46,9 +46,14 @@ const renderProofTree = (node: HTMLElement) => {
     node.insertBefore(prtrFragment?.afterTextNode, prtrFragment?.nodeList[0]);
     node.removeChild(prtrFragment?.nodeList[0]);
 
-    setTimeout(applyStyles, 0);
+    if (styleOnLoad === null) {
+      window.addEventListener("load", () => applyStyles(elem), false);
+    } else {
+      setTimeout(() => applyStyles(elem), styleOnLoad);
+    }
+
     if (node.innerHTML.includes("\\begin{prooftree}")) {
-      renderProofTree(node);
+      renderProofTree(node, styleOnLoad);
     }
   } catch (e) {
     console.error(e);
@@ -353,11 +358,8 @@ const createPrtrDomHelper = (prtrDom: ProofTree): HTMLElement => {
   }
 };
 
-const createPrtrDom = (prtrDom: ProofTree): HTMLElement => {
-  const pt = div("proof-tree", [createPrtrDomHelper(prtrDom)]);
-  pt.classList.add(BH + "unrendered");
-  return pt;
-};
+const createPrtrDom = (prtrDom: ProofTree): HTMLElement =>
+  div("proof-tree", [createPrtrDomHelper(prtrDom)]);
 
 interface PrtrStyleAux {
   w: number;
@@ -543,16 +545,7 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
   }
 };
 
-const applyStyles = () => {
-  const prooftrees = Array.from(
-    document.getElementsByClassName(`${BH}proof-tree ${BH}unrendered`)
-  ) as HTMLElement[];
-  console.log(prooftrees);
-  prooftrees.forEach((pt) => {
-    const prtrStyle = getPrtrStyle(pt.children[0]! as HTMLElement);
-    applyStylesToPrtr(prtrStyle);
-    pt.classList.remove(BH + "unrendered");
-    // pt.style.width = "100%";
-    // pt.style.overflowX = "scroll";
-  });
+const applyStyles = (pt: HTMLElement) => {
+  const prtrStyle = getPrtrStyle(pt.children[0]! as HTMLElement);
+  applyStylesToPrtr(prtrStyle);
 };
