@@ -30,7 +30,7 @@ You can use this engine by adding a script tag as follows:
 ```
 
 - html source: [demo/sample.html](./demo/sample.html)
-- deployed page: https://sano-jin.github.io/busproofs-html/demo/sample.html
+- deployed page: <https://sano-jin.github.io/busproofs-html/demo/sample.html>
 
 > [!NOTE]  
 > CSS class names starting from `bussproofs-html__` are reserved.
