@@ -11,7 +11,7 @@ Here comes a proof tree:
 \begin{prooftree}
 \AXC{$1 + 2 + 3 + 4 + 5$}
 \RightLabel{Label 7}
-\UIC{a}
+\UIC{$1 + a$}
 \RightLabel{Label 6}
 \UIC{$1 + 2 + 3$}
 \AXC{$1 + 2$}

@@ -24,10 +24,8 @@ You can use this engine by adding a script tag as follows:
 
 ```html
 <script type="module">
-  import { renderProofTrees } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
-  window.addEventListener("load", function () {
-    renderProofTrees();
-  });
+  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  renderProofTreesOnLoad();
 </script>
 ```
 
@@ -85,8 +83,8 @@ Here comes a proof tree:
 \end{prooftree}
 
 <script type="module">
-  import { renderProofTrees } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
-  window.addEventListener('load', function() { renderProofTrees() });
+  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  renderProofTreesOnLoad();
 </script>
 ```
 
