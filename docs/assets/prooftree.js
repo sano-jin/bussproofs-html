@@ -230,7 +230,7 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20p
       node: t
     };
   } else if (t.classList.contains(f + "sequent")) {
-    const e = t.children[0], n = t.children[1], o = n.children[0], s = t.children[2], r = Array.prototype.slice.apply(e.children), l = s.children[0].offsetWidth + w * 2, c = o.offsetWidth + R, m = r.map(A), i = m.map((d) => d.prtrStyleAux);
+    const e = t.children[0], n = t.children[1], o = n.children[0], s = t.children[2], r = Array.prototype.slice.apply(e.children), l = s.children[0] ? s.children[0].offsetWidth + w * 2 : s.offsetWidth + w * 2, c = o.offsetWidth + R, m = r.map(A), i = m.map((d) => d.prtrStyleAux);
     r.length === 0 && console.error("error: empty premises", r);
     const u = q(i.map((d) => d.w)) + M * (i.length - 1) - i[0].mlc - i[i.length - 1].mrc;
     if (u > l) {

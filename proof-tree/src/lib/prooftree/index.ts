@@ -452,8 +452,10 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
     const nodeConclusion = node.children[2] as HTMLElement;
     const premises = Array.prototype.slice.apply(nodePremises.children);
 
-    const widthC =
-      (nodeConclusion.children[0] as HTMLElement).offsetWidth + paddingLR * 2;
+    const widthC = nodeConclusion.children[0]
+      ? (nodeConclusion.children[0] as HTMLElement).offsetWidth + paddingLR * 2
+      : nodeConclusion.offsetWidth + paddingLR * 2;
+
     // console.log("widthC", widthC);
     const widthL = nodeLabel.offsetWidth + marginLabelLeft;
 
