@@ -6,7 +6,7 @@ const BH = "bussproofs-html__";
 const style = `div.${BH}proof-tree{max-width:100%;margin:20px auto}div.${BH}sequent{width:auto;text-align:center}div.${BH}premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.${BH}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${BH}horizontal-rule>.${BH}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`;
 
 export const renderProofTreesOnLoad = (styleOnLoad: null | number = null) => {
-  console.log(`renderProofTreesOnLoad(styleOnLoad)`);
+  console.log(`renderProofTreesOnLoad(${styleOnLoad})`);
   document.addEventListener("DOMContentLoaded", () => {
     renderProofTrees(styleOnLoad);
   });
