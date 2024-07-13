@@ -1,10 +1,10 @@
 console.log("ProofTree v0.0.1");
 const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20px auto}div.${f}sequent{width:auto;text-align:center}div.${f}premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.${f}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${f}horizontal-rule>.${f}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`, X = (t = null) => {
-  console.log("renderProofTreesOnLoad()"), document.addEventListener("DOMContentLoaded", function() {
+  console.log("renderProofTreesOnLoad(styleOnLoad)"), document.addEventListener("DOMContentLoaded", () => {
     v(t);
   });
 }, v = (t = null) => {
-  console.log("renderProofTrees()");
+  console.log(`renderProofTrees(${t})`);
   const e = document.createElement("style");
   e.innerHTML = B, document.head.appendChild(e), Array.from(
     document.body.getElementsByTagName("P")
@@ -15,13 +15,13 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20p
   try {
     const n = I(t);
     if (!n) throw new Error("cannot find fragment");
-    const o = $(n);
+    const o = z(n);
     if (!o) throw new Error("error: cannot recognise latex command");
     const s = S(o);
     if (!s) throw new Error("error: cannot construct proof tree");
-    n == null || n.nodeList.slice(1).forEach((l) => {
+    n == null || n.nodeList.slice(1).forEach((i) => {
       var c;
-      return (c = l.parentNode) == null ? void 0 : c.removeChild(l);
+      return (c = i.parentNode) == null ? void 0 : c.removeChild(i);
     });
     const r = H(s);
     t.insertBefore(n == null ? void 0 : n.beforeTextNode, n == null ? void 0 : n.nodeList[0]), t.insertBefore(r, n == null ? void 0 : n.nodeList[0]), t.insertBefore(n == null ? void 0 : n.afterTextNode, n == null ? void 0 : n.nodeList[0]), t.removeChild(n == null ? void 0 : n.nodeList[0]), e === null ? window.addEventListener("load", () => C(r), !1) : setTimeout(() => C(r), e), t.innerHTML.includes("\\begin{prooftree}") && N(t, e);
@@ -30,28 +30,28 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20p
   }
 }, L = (t, e) => {
   let n = -1, o = -1;
-  for (let i = 0; i < e.length; i++)
-    if (e[i].nodeType === Node.TEXT_NODE) {
-      const u = e[i].nodeValue.indexOf(t);
+  for (let l = 0; l < e.length; l++)
+    if (e[l].nodeType === Node.TEXT_NODE) {
+      const u = e[l].nodeValue.indexOf(t);
       if (u !== -1) {
-        o = i, n = u;
+        o = l, n = u;
         break;
       }
     }
   if (n === -1) return null;
-  const s = e[o].nodeValue, r = s.slice(0, n), l = s.slice(n + t.length), c = document.createTextNode(r), m = document.createTextNode(l);
+  const s = e[o].nodeValue, r = s.slice(0, n), i = s.slice(n + t.length), c = document.createTextNode(r), m = document.createTextNode(i);
   return [o, c, m];
 }, I = (t) => {
   const e = Array.from(t.childNodes), n = L("\\begin{prooftree}", e);
   if (n === null) return null;
-  const [o, s, r] = n, l = e.slice(o), c = [...l];
+  const [o, s, r] = n, i = e.slice(o), c = [...i];
   c.splice(0, 1, r);
   const m = L("\\end{prooftree}", c);
   if (m === null) return null;
-  const [i, u, d] = m, h = l.slice(0, i + 1), y = c;
+  const [l, u, d] = m, h = i.slice(0, l + 1), y = c;
   y.splice(
-    i,
-    c.length - i,
+    l,
+    c.length - l,
     u
   );
   const p = y.filter(
@@ -63,7 +63,7 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20p
     beforeTextNode: s,
     afterTextNode: d
   };
-}, z = (t) => {
+}, $ = (t) => {
   t[0].nodeValue = t[0].nodeValue.trimStart();
 }, P = (t) => {
   const e = t[0].nodeValue.indexOf(`
@@ -85,10 +85,10 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20p
       else return a(t, e);
     return null;
   }
-}, $ = (t) => {
+}, z = (t) => {
   const e = t.prtrNodeList;
   let n = [], o = 100;
-  for (; e.length > 0 && o-- > 0 && (z(e), e.length !== 0); ) {
+  for (; e.length > 0 && o-- > 0 && ($(e), e.length !== 0); ) {
     if (e[0].nodeType !== Node.TEXT_NODE) return null;
     const s = e[0].nodeValue;
     if (s.startsWith("%")) {
@@ -155,7 +155,7 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20p
   let s = [];
   o.type === "RightLabel" && (t.shift(), s = o.body);
   const r = [];
-  for (let l = 0; l < n; l++) {
+  for (let i = 0; i < n; i++) {
     const c = V(t);
     if (!c) return null;
     r.push(c);
@@ -230,14 +230,14 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20p
       node: t
     };
   } else if (t.classList.contains(f + "sequent")) {
-    const e = t.children[0], n = t.children[1], o = n.children[0], s = t.children[2], r = Array.prototype.slice.apply(e.children), l = s.children[0].offsetWidth + w * 2, c = o.offsetWidth + O, m = r.map(A), i = m.map((d) => d.prtrStyleAux);
+    const e = t.children[0], n = t.children[1], o = n.children[0], s = t.children[2], r = Array.prototype.slice.apply(e.children), i = s.children[0].offsetWidth + w * 2, c = o.offsetWidth + O, m = r.map(A), l = m.map((d) => d.prtrStyleAux);
     r.length === 0 && console.error("error: empty premises", r);
-    const u = R(i.map((d) => d.w)) + M * (i.length - 1) - i[0].mlc - i[i.length - 1].mrc;
-    if (u > l) {
-      const d = u, h = i[0].mlc, y = h + (u - l) / 2, p = Math.max(i[i.length - 1].mrc, c), b = p + (u - l) / 2;
+    const u = R(l.map((d) => d.w)) + M * (l.length - 1) - l[0].mlc - l[l.length - 1].mrc;
+    if (u > i) {
+      const d = u, h = l[0].mlc, y = h + (u - i) / 2, p = Math.max(l[l.length - 1].mrc, c), b = p + (u - i) / 2;
       return {
         type: "PSSequent",
-        prtrStyleAux: { w: d + h + p, whr: d, mlc: y, mrc: b, mlhr: h, mrhr: p, widthC: l, widthL: c, mlp: 0 },
+        prtrStyleAux: { w: d + h + p, whr: d, mlc: y, mrc: b, mlhr: h, mrhr: p, widthC: i, widthL: c, mlp: 0 },
         premises: m,
         node: t,
         nodePremises: e,
@@ -246,10 +246,10 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20p
         nodeConclusion: s
       };
     } else {
-      const d = l, h = Math.max(i[0].mlc - (l - u) / 2, 0), y = Math.max((l - u) / 2 - i[0].mlc, 0), p = h, b = Math.max(i[i.length - 1].mrc - (l - u) / 2, c), x = b;
+      const d = i, h = Math.max(l[0].mlc - (i - u) / 2, 0), y = Math.max((i - u) / 2 - l[0].mlc, 0), p = h, b = Math.max(l[l.length - 1].mrc - (i - u) / 2, c), x = b;
       return {
         type: "PSSequent",
-        prtrStyleAux: { w: d + h + b, whr: d, mlc: p, mrc: x, mlhr: h, mrhr: b, widthC: l, widthL: c, mlp: y },
+        prtrStyleAux: { w: d + h + b, whr: d, mlc: p, mrc: x, mlhr: h, mrhr: b, widthC: i, widthL: c, mlp: y },
         premises: m,
         node: t,
         nodePremises: e,

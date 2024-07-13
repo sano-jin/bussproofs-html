@@ -25,3 +25,4 @@ Here comes a proof tree:
 \end{prooftree}
 iage
 aiaiaia
+jiage
