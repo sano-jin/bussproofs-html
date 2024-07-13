@@ -1,25 +1,28 @@
-div.prooftree,
-div.prtr-proof-tree {
-  width: fit-content;
+div.bussproofs-html__proof-tree {
+  max-width: 100%;
   margin: 20px auto;
 }
-div.prtr-sequent {
+
+div.bussproofs-html__sequent {
   width: auto;
   text-align: center;
 }
-div.prtr-premises {
+
+div.bussproofs-html__premises {
   width: auto;
   display: flex;
   flex-direction: row;
   gap: 20px;
   align-items: flex-end;
 }
-div.prtr-horizontal-rule {
+
+div.bussproofs-html__horizontal-rule {
   width: 100%;
   border-bottom: 1.3px solid;
   position: relative;
 }
-div.prtr-horizontal-rule > .prtr-right-label {
+
+div.bussproofs-html__horizontal-rule > .bussproofs-html__right-label {
   position: absolute;
   height: auto;
   top: -50%;

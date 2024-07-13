@@ -2,18 +2,18 @@
 
 console.log("ProofTree v0.0.1");
 
-const style =
-  "div.prooftree,div.prtr-proof-tree{width:fit-content;margin:20px auto}div.prtr-sequent{width:auto;text-align:center}div.prtr-premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.prtr-horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.prtr-horizontal-rule>.prtr-right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}";
+const BH = "bussproofs-html__";
+const style = `div.${BH}proof-tree{max-width:100%;margin:20px auto}div.${BH}sequent{width:auto;text-align:center}div.${BH}premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.${BH}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${BH}horizontal-rule>.${BH}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`;
 
 export const renderProofTreesOnLoad = () => {
-  console.log("renderProofTreesOnLoad");
+  console.log("renderProofTreesOnLoad()");
   document.addEventListener("DOMContentLoaded", function () {
     renderProofTrees();
   });
 };
 
 export const renderProofTrees = () => {
-  console.log("renderProofTrees");
+  console.log("renderProofTrees()");
   const styleElem = document.createElement("style");
   styleElem.innerHTML = style;
   document.head.appendChild(styleElem);
@@ -21,46 +21,37 @@ export const renderProofTrees = () => {
   const nodeArray = Array.from(
     <HTMLCollectionOf<HTMLElement>>document.body.getElementsByTagName("P")
   );
-  // console.log("nodes with tag P", nodeArray);
   const nodes = nodeArray.filter((node) =>
     node.innerHTML.includes("\\begin{prooftree}")
   );
-  // console.log("filtered nodes", nodes);
-  // console.log(nodes.map((node) => getPrtrFragment(node)));
 
   nodes.forEach((node) => renderProofTree(node));
 };
 
 const renderProofTree = (node: HTMLElement) => {
-  const prtrFragment = getPrtrFragment(node);
-  if (!prtrFragment) {
-    console.log("cannot find fragment");
-    return;
-  }
-  const ltxCommands = createLtxCommands(prtrFragment);
-  if (!ltxCommands) {
-    console.log("error: cannot recognise latex command");
-    return;
-  }
-  const proofTree = parseProofTree(ltxCommands!);
-  if (!proofTree) {
-    console.log("error: cannot construct proof tree");
-    return;
-  }
-  prtrFragment?.nodeList
-    .slice(1)
-    .forEach((node) => node.parentNode?.removeChild(node));
-  console.log(proofTree);
-  const elem = createPrtrDom(proofTree!);
+  try {
+    const prtrFragment = getPrtrFragment(node);
+    if (!prtrFragment) throw new Error("cannot find fragment");
+    const ltxCommands = createLtxCommands(prtrFragment);
+    if (!ltxCommands) throw new Error("error: cannot recognise latex command");
+    const proofTree = parseProofTree(ltxCommands!);
+    if (!proofTree) throw new Error("error: cannot construct proof tree");
+    prtrFragment?.nodeList
+      .slice(1)
+      .forEach((node) => node.parentNode?.removeChild(node));
+    const elem = createPrtrDom(proofTree);
 
-  node.insertBefore(prtrFragment?.beforeTextNode, prtrFragment?.nodeList[0]);
-  node.insertBefore(elem, prtrFragment?.nodeList[0]);
-  node.insertBefore(prtrFragment?.afterTextNode, prtrFragment?.nodeList[0]);
-  node.removeChild(prtrFragment?.nodeList[0]);
+    node.insertBefore(prtrFragment?.beforeTextNode, prtrFragment?.nodeList[0]);
+    node.insertBefore(elem, prtrFragment?.nodeList[0]);
+    node.insertBefore(prtrFragment?.afterTextNode, prtrFragment?.nodeList[0]);
+    node.removeChild(prtrFragment?.nodeList[0]);
 
-  setTimeout(applyStyles, 0);
-  if (node.innerHTML.includes("\\begin{prooftree}")) {
-    renderProofTree(node);
+    setTimeout(applyStyles, 0);
+    if (node.innerHTML.includes("\\begin{prooftree}")) {
+      renderProofTree(node);
+    }
+  } catch (e) {
+    console.error(e);
   }
 };
 
@@ -83,13 +74,11 @@ const searchBeginEnd = (
   nodes: Node[]
 ): [number, Node, Node] | null => {
   let jiBeginPT = -1;
-  let iBeginPT: number = -1;
+  let iBeginPT = -1;
   for (let i = 0; i < nodes.length; i++) {
-    // console.log(i);
     if (nodes[i].nodeType === Node.TEXT_NODE) {
       const j = nodes[i].nodeValue!.indexOf(delimeter);
       if (j !== -1) {
-        // console.log(delimeter);
         iBeginPT = i;
         jiBeginPT = j;
         break;
@@ -109,27 +98,16 @@ const searchBeginEnd = (
 const getPrtrFragment = (parentNode: HTMLElement): PrtrFragment | null => {
   const nodes: Node[] = Array.from(parentNode.childNodes);
 
-  // Step 1.
-  const result1 = searchBeginEnd("\\begin{prooftree}", nodes);
-  if (result1 === null) return null;
-  const [iBeginPT, beforeTextNode, afterBeginPTTextNode] = result1;
-  // console.log(
-  //   "nodes, iBeginPT, beforeTextNode, afterBeginPTTextNode",
-  //   nodes,
-  //   iBeginPT,
-  //   beforeTextNode,
-  //   afterBeginPTTextNode
-  // );
+  const resultBegin = searchBeginEnd("\\begin{prooftree}", nodes);
+  if (resultBegin === null) return null;
+  const [iBeginPT, beforeTextNode, afterBeginPTTextNode] = resultBegin;
   const nodeList = nodes.slice(iBeginPT);
   const prtrNodeList = [...nodeList];
   prtrNodeList.splice(0, 1, afterBeginPTTextNode);
-  // let prtrNodeList = [...nodeList];
-  // prtrNodeList[0] = afterBeginPTTextNode;
-  // console.log(prtrNodeList);
 
-  const result2 = searchBeginEnd("\\end{prooftree}", prtrNodeList);
-  if (result2 === null) return null;
-  const [iEndPT, beforeEndPTTextNode, afterTextNode] = result2;
+  const resultEnd = searchBeginEnd("\\end{prooftree}", prtrNodeList);
+  if (resultEnd === null) return null;
+  const [iEndPT, beforeEndPTTextNode, afterTextNode] = resultEnd;
   const nodeList2 = nodeList.slice(0, iEndPT + 1);
   const prtrNodeList2 = prtrNodeList;
   prtrNodeList2.splice(
@@ -137,30 +115,17 @@ const getPrtrFragment = (parentNode: HTMLElement): PrtrFragment | null => {
     prtrNodeList.length - iEndPT,
     beforeEndPTTextNode
   );
-  // console.log("prtrNodeList", prtrNodeList);
-  // console.log("iEndPT", iEndPT);
-  // console.log("prtrNodeList.length - iEndPT", prtrNodeList.length - iEndPT);
-  // console.log("beforeEndPTTextNode", beforeEndPTTextNode);
-  // console.log("prtrNodeList2", prtrNodeList2);
 
-  // remove comment nodes from prtrNodeList2
   const prtrNodeList3 = prtrNodeList2.filter(
     (node) => node.nodeType !== Node.COMMENT_NODE
   );
 
-  // return {
-  //   nodeList: nodeList2,
-  //   prtrNodeList: prtrNodeList3,
-  //   beforeTextNode: beforeTextNode,
-  //   afterTextNode: afterTextNode,
-  // };
   const result3 = {
     nodeList: nodeList2,
     prtrNodeList: prtrNodeList3,
     beforeTextNode: beforeTextNode,
     afterTextNode: afterTextNode,
   };
-  // console.log(result3);
   return result3;
 };
 
@@ -172,13 +137,8 @@ type LtxCommand =
   | { type: "QuaternaryInfC"; body: Node[] }
   | { type: "RightLabel"; body: Node[] };
 
-// type LtxCommands = LtxCommand[];
-
 const consumeSpaces = (nodes: Node[]) => {
   nodes[0].nodeValue = nodes[0].nodeValue!.trimStart();
-  // if (nodes[0].nodeValue.length === 0) {
-  //   nodes.shift();
-  // }
 };
 
 // もし true を返すなら，必ずテキストノードが先頭に来る．
@@ -191,9 +151,7 @@ const consumeComments = (nodes: Node[]): boolean => {
     nodes.shift();
     while (nodes.length > 0) {
       if (nodes[0].nodeType !== Node.TEXT_NODE) nodes.shift();
-      else {
-        return consumeComments(nodes);
-      }
+      else return consumeComments(nodes);
     }
     return false;
   }
@@ -204,7 +162,6 @@ const consumeLtxCommand = (nodes: Node[], acc: Node[]): Node[] | null => {
   const text = nodes[0].nodeValue!;
   const i = text.indexOf("}");
   if (i !== -1) {
-    // console.log("hogehoge1");
     const finalTextNode = document.createTextNode(text.slice(0, i));
     nodes[0].nodeValue! = text.substring(i + 1);
     acc.push(finalTextNode);
@@ -213,11 +170,8 @@ const consumeLtxCommand = (nodes: Node[], acc: Node[]): Node[] | null => {
     acc.push(nodes.shift()!);
     while (nodes.length > 0) {
       if (nodes[0].nodeType !== Node.TEXT_NODE) acc.push(nodes.shift()!);
-      else {
-        return consumeLtxCommand(nodes, acc);
-      }
+      else return consumeLtxCommand(nodes, acc);
     }
-    // console.log("HOGEHOGE2");
     return null;
   }
 };
@@ -225,16 +179,15 @@ const consumeLtxCommand = (nodes: Node[], acc: Node[]): Node[] | null => {
 const createLtxCommands = (prtrFragment: PrtrFragment): LtxCommand[] | null => {
   const nodes = prtrFragment.prtrNodeList;
   let ltxCommands: LtxCommand[] = [];
-  let i = 20;
+  let i = 100; // A safeguard to prevent infinite loop (unnecessory)
+
   while (nodes.length > 0 && i-- > 0) {
-    // console.log("counter", i);
     consumeSpaces(nodes);
     if (nodes.length === 0) break;
     if (nodes[0].nodeType !== Node.TEXT_NODE) return null; // unreachable.
     const text = nodes[0].nodeValue!;
     if (text.startsWith("%")) {
       nodes[0].nodeValue! = text.substring(1);
-      // console.log("consumeComments");
       if (!consumeComments(nodes)) return null;
     } else if (text.startsWith("\\AXC{")) {
       nodes[0].nodeValue! = text.substring("\\AXC{".length);
@@ -266,11 +219,42 @@ const createLtxCommands = (prtrFragment: PrtrFragment): LtxCommand[] | null => {
       const body = consumeLtxCommand(nodes, []);
       if (body === null) return null;
       ltxCommands.push({ type: "RightLabel", body: body });
+    } else if (text.startsWith("\\normalsize{")) {
+      nodes[0].nodeValue! = text.substring("\\normalsize{".length);
+      const body = consumeLtxCommand(nodes, []);
+      if (body === null) return null;
+    } else if (text.startsWith("\\normalsize")) {
+      nodes[0].nodeValue! = text.substring("\\normalsize".length);
+    } else if (text.startsWith("\\small{")) {
+      nodes[0].nodeValue! = text.substring("\\small{".length);
+      const body = consumeLtxCommand(nodes, []);
+      if (body === null) return null;
+    } else if (text.startsWith("\\small")) {
+      nodes[0].nodeValue! = text.substring("\\small".length);
+    } else if (text.startsWith("\\footnotesize{")) {
+      nodes[0].nodeValue! = text.substring("\\footnotesize{".length);
+      const body = consumeLtxCommand(nodes, []);
+      if (body === null) return null;
+    } else if (text.startsWith("\\footnotesize")) {
+      nodes[0].nodeValue! = text.substring("\\footnotesize".length);
+    } else if (text.startsWith("\\scriptsize{")) {
+      nodes[0].nodeValue! = text.substring("\\scriptsize{".length);
+      const body = consumeLtxCommand(nodes, []);
+      if (body === null) return null;
+    } else if (text.startsWith("\\scriptsize")) {
+      nodes[0].nodeValue! = text.substring("\\scriptsize".length);
+    } else if (text.startsWith("\\tiny{")) {
+      nodes[0].nodeValue! = text.substring("\\tiny{".length);
+      const body = consumeLtxCommand(nodes, []);
+      if (body === null) return null;
+    } else if (text.startsWith("\\tiny")) {
+      nodes[0].nodeValue! = text.substring("\\tiny".length);
     } else if (nodes[0].nodeValue!.length === 0) {
-      console.log("no more chars");
+      // console.log("no more chars");
+      // succeed
       nodes.shift();
     } else {
-      console.log("error: unrecognised charactor", nodes[0].nodeValue);
+      console.error("error: unrecognised charactor", nodes[0].nodeValue);
       return null;
     }
   }
@@ -346,10 +330,10 @@ const parseProofTree = (ltxCommands: LtxCommand[]): ProofTree | null => {
 
 const div = (label: string, children: Node[]): HTMLElement => {
   const newDiv = document.createElement("div");
-  newDiv.classList.add("prtr-" + label);
-  // if (label === "conclusion") {
-  newDiv.style.width = "max-content";
-  // }
+  newDiv.classList.add(BH + label);
+  if (label === "axiom" || label === "right-label" || label === "conclusion") {
+    newDiv.style.width = "max-content";
+  }
   children.forEach((node) => newDiv.appendChild(node));
   return newDiv;
 };
@@ -371,7 +355,7 @@ const createPrtrDomHelper = (prtrDom: ProofTree): HTMLElement => {
 
 const createPrtrDom = (prtrDom: ProofTree): HTMLElement => {
   const pt = div("proof-tree", [createPrtrDomHelper(prtrDom)]);
-  pt.classList.add("unrendered");
+  pt.classList.add(BH + "unrendered");
   return pt;
 };
 
@@ -391,16 +375,12 @@ type PrtrStyle =
   | {
       type: "PSAxiom";
       prtrStyleAux: PrtrStyleAux;
-      //
       node: HTMLElement;
     }
   | {
       type: "PSSequent";
-      //
       prtrStyleAux: PrtrStyleAux;
-      //
       premises: PrtrStyle[];
-      //
       node: HTMLElement;
       nodePremises: HTMLElement;
       nodeHR: HTMLElement;
@@ -417,13 +397,10 @@ const sum = (nums: number[]): number => nums.reduce((acc, x) => acc + x, 0);
 const applyStylesToPrtr = (prtrStyle: PrtrStyle) => {
   switch (prtrStyle.type) {
     case "PSAxiom": {
-      // prtrStyle.node.style.width = `${d.widthC}px`;
       prtrStyle.node.style.marginLeft = `${paddingLR}px`;
       return;
     }
     case "PSSequent": {
-      // console.log(prtrStyle);
-
       const d = prtrStyle.prtrStyleAux;
 
       prtrStyle.node.style.width = `${d.w}px`;
@@ -446,7 +423,7 @@ const applyStylesToPrtr = (prtrStyle: PrtrStyle) => {
 };
 
 const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
-  if (node.classList.contains("prtr-axiom")) {
+  if (node.classList.contains(BH + "axiom")) {
     const width = node.offsetWidth + paddingLR * 2;
     // console.log("axiom", width);
     const prtrStyleAux = {
@@ -466,7 +443,7 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
       node: node,
     };
     return prtrStyle;
-  } else if (node.classList.contains("prtr-sequent")) {
+  } else if (node.classList.contains(BH + "sequent")) {
     const nodePremises = node.children[0] as HTMLElement;
     const nodeHR = node.children[1] as HTMLElement;
     const nodeLabel = nodeHR.children[0] as HTMLElement;
@@ -481,7 +458,7 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
     const pss = premises.map(getPrtrStyle);
     const ps = pss.map((p) => p.prtrStyleAux);
     if (premises.length === 0) {
-      console.log("error: empty premises", premises);
+      console.error("error: empty premises", premises);
     }
 
     // $wpc(D) \triangleq
@@ -516,21 +493,8 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
 
       return {
         type: "PSSequent",
-        //
-        prtrStyleAux: {
-          w,
-          whr,
-          mlc,
-          mrc,
-          mlhr,
-          mrhr,
-          widthC,
-          widthL,
-          mlp: 0,
-        },
-        //
+        prtrStyleAux: { w, whr, mlc, mrc, mlhr, mrhr, widthC, widthL, mlp: 0 },
         premises: pss,
-        //
         node,
         nodePremises,
         nodeHR,
@@ -544,7 +508,6 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
       const whr = widthC;
 
       // $mlhr(D) \triangleq mlc(P_1) - \dfrac{width(C) - wpc(D)}{2}$
-      // const mlhr2 = ps[0].mlc - (widthC - wpc) / 2;
       const mlhr = Math.max(ps[0].mlc - (widthC - wpc) / 2, 0);
       // console.log("mlhr", mlhr);
 
@@ -566,21 +529,8 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
 
       return {
         type: "PSSequent",
-        //
-        prtrStyleAux: {
-          w,
-          whr,
-          mlc,
-          mrc,
-          mlhr,
-          mrhr,
-          widthC,
-          widthL,
-          mlp,
-        },
-        //
+        prtrStyleAux: { w, whr, mlc, mrc, mlhr, mrhr, widthC, widthL, mlp },
         premises: pss,
-        //
         node,
         nodePremises,
         nodeHR,
@@ -589,20 +539,20 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
       };
     }
   } else {
-    // error
-    console.log("error");
-    throw new RangeError();
+    throw new Error("error");
   }
 };
 
 const applyStyles = () => {
   const prooftrees = Array.from(
-    document.getElementsByClassName("prtr-proof-tree unrendered")
-  );
+    document.getElementsByClassName(`${BH}proof-tree ${BH}unrendered`)
+  ) as HTMLElement[];
   console.log(prooftrees);
   prooftrees.forEach((pt) => {
     const prtrStyle = getPrtrStyle(pt.children[0]! as HTMLElement);
     applyStylesToPrtr(prtrStyle);
-    pt.classList.remove("unrendered");
+    pt.classList.remove(BH + "unrendered");
+    // pt.style.width = "100%";
+    // pt.style.overflowX = "scroll";
   });
 };

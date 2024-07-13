@@ -6,11 +6,13 @@ A JavaScript engine to render bussproofs style proof tree in html.
 
 ## Preliminary
 
-- Only `\RightLabel` can be used for a label for now.
 - Only proof trees directly under `p` elements are rendered.
+- Only `\RightLabel` can be used for a label for now.
 - Only `\AXC`, `\UIC`, `\BIC`, `\TIC`, and `\QuaternaryInfC` are allowed
   as a constcutor of the node of a proof tree.
-  No other LaTeX commands are allowed.
+- `\normalsize`, `\small`, `\footnotesize`, `\scriptsize`, and `\tiny`
+  are ignored.
+- No other LaTeX commands are allowed.
 
 Send me PRs if you enable others.
 
@@ -31,6 +33,9 @@ You can use this engine by adding a script tag as follows:
 
 - html source: [demo/sample.html](./demo/sample.html)
 - deployed page: https://sano-jin.github.io/busproofs-html/sample.html
+
+> [!NOTE]  
+> CSS class names starting from `bussproofs-html__` are reserved.
 
 ### markdown-preview.nvim
 
