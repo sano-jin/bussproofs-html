@@ -1,5 +1,5 @@
 console.log("ProofTree v0.0.1");
-const f = "bussproofs-html__", B = `div.${f}proof-tree{max-width:100%;margin:20px auto}div.${f}sequent{width:auto;text-align:center}div.${f}premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.${f}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${f}horizontal-rule>.${f}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`, X = (t = null) => {
+const f = "bussproofs-html__", B = `div.${f}proof-tree{margin:20px auto}div.${f}sequent{width:auto;text-align:center}div.${f}premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.${f}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${f}horizontal-rule>.${f}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`, X = (t = null) => {
   console.log(`renderProofTreesOnLoad(${t})`), document.addEventListener("DOMContentLoaded", () => {
     $(t);
   });
