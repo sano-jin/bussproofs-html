@@ -24,13 +24,13 @@ You can use this engine by adding a script tag as follows:
 
 ```html
 <script type="module">
-  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/bussproofs-html/assets/prooftree.js";
   renderProofTreesOnLoad();
 </script>
 ```
 
 - html source: [demo/sample.html](./demo/sample.html)
-- deployed page: <https://sano-jin.github.io/busproofs-html/demo/sample.html>
+- deployed page: <https://sano-jin.github.io/bussproofs-html/demo/sample.html>
 
 > [!NOTE]  
 > CSS class names starting from `bussproofs-html__` are reserved.
@@ -67,7 +67,7 @@ You can use this engine by adding a script tag as follows:
 marp: true
 math: katex
 paginate: true
-footer: https://github.com/sano-jin/busproofs-html
+footer: https://github.com/sano-jin/bussproofs-html
 ---
 
 # Integration with Marp is easy!
@@ -83,7 +83,7 @@ Here comes a proof tree:
 \end{prooftree}
 
 <script type="module">
-  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/bussproofs-html/assets/prooftree.js";
   renderProofTreesOnLoad();
 </script>
 ```

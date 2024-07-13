@@ -2,7 +2,7 @@
 marp: true
 math: katex
 paginate: true
-footer: https://github.com/sano-jin/busproofs-html
+footer: https://github.com/sano-jin/bussproofs-html
 ---
 
 # Integration with Marp is easy!
@@ -35,12 +35,12 @@ Here comes a proof tree:
 \end{prooftree}
 
 <script type="module">
-  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/bussproofs-html/assets/prooftree.js";
   renderProofTreesOnLoad();
 </script>
 ```
 
 <script type="module">
-  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/bussproofs-html/assets/prooftree.js";
   renderProofTreesOnLoad();
 </script>
