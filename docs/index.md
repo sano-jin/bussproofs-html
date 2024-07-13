@@ -1,18 +1,22 @@
-# bussproofs-html
-
 A JavaScript engine to render bussproofs style proof tree in html.
 
 github: [sano-jin/busproofs-html](https://github.com/sano-jin/busproofs-html)
 
-![](./nvim-preview.gif)
+# bussproofs-html
+
+A JavaScript engine to render bussproofs style proof tree in html.
+
+![](./demo/nvim-preview.gif)
 
 ## Preliminary
 
-- Only `\RightLabel` can be used for a label for now.
 - Only proof trees directly under `p` elements are rendered.
+- Only `\RightLabel` can be used for a label for now.
 - Only `\AXC`, `\UIC`, `\BIC`, `\TIC`, and `\QuaternaryInfC` are allowed
   as a constcutor of the node of a proof tree.
-  No other LaTeX commands are allowed.
+- `\normalsize`, `\small`, `\footnotesize`, `\scriptsize`, and `\tiny`
+  are ignored.
+- No other LaTeX commands are allowed.
 
 Send me PRs if you enable others.
 
@@ -24,15 +28,16 @@ You can use this engine by adding a script tag as follows:
 
 ```html
 <script type="module">
-  import { renderProofTrees } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
-  window.addEventListener("load", function () {
-    renderProofTrees();
-  });
+  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  renderProofTreesOnLoad();
 </script>
 ```
 
-- html source: [demo/sample.html](https://github.com/sano-jin/busproofs-html/tree/master/demo/sample.html)
-- deployed page: https://sano-jin.github.io/busproofs-html/sample.html
+- html source: [demo/sample.html](./demo/sample.html)
+- deployed page: https://sano-jin.github.io/busproofs-html/demo/sample.html
+
+> [!NOTE]  
+> CSS class names starting from `bussproofs-html__` are reserved.
 
 ### markdown-preview.nvim
 
@@ -55,7 +60,7 @@ you can use the previewer as follows:
   },
 ```
 
-![](./nvim-preview.gif)
+![](./demo/nvim-preview.gif)
 
 ### Marp
 
@@ -82,15 +87,15 @@ Here comes a proof tree:
 \end{prooftree}
 
 <script type="module">
-  import { renderProofTrees } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
-  window.addEventListener('load', function() { renderProofTrees() });
+  import { renderProofTreesOnLoad } from "https://sano-jin.github.io/busproofs-html/assets/prooftree.js";
+  renderProofTreesOnLoad();
 </script>
 ```
 
-![](./marp-sample-0.png)
+![](./demo/marp-sample-0.png)
 
-- markdown: [marp-sample.md](https://github.com/sano-jin/busproofs-html/tree/master/demo/marp-sample.md)
-- output pdf: [demo/marp-sample.pdf](https://github.com/sano-jin/busproofs-html/tree/master/demo/marp-sample.pdf)
+- markdown: [demo/marp-sample.md](./demo/marp-sample.md)
+- output pdf: [demo/marp-sample.pdf](./demo/marp-sample.pdf)
 
 ### VSCode
 
