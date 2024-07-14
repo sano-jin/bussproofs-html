@@ -3,7 +3,11 @@
 console.log("ProofTree v0.0.1");
 
 const BH = "bussproofs-html__";
-const style = `div.${BH}proof-tree{width:max-content;margin:20px auto}div.${BH}sequent{width:auto;text-align:center}div.${BH}premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.${BH}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${BH}horizontal-rule>.${BH}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`;
+const marginPremises = 20;
+const paddingLR = 20;
+const marginLabelLeft = 10;
+
+const style = `div.${BH}proof-tree{width:max-content;margin:20px auto}div.${BH}sequent{width:auto;text-align:center}div.${BH}premises{width:auto;display:flex;flex-direction:row;gap:${marginPremises}px;align-items:flex-end}div.${BH}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${BH}horizontal-rule>.${BH}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`;
 
 export const renderProofTreesOnLoad = (styleOnLoad: null | number = null) => {
   console.log(`renderProofTreesOnLoad(${styleOnLoad})`);
@@ -390,16 +394,12 @@ type PrtrStyle =
       nodeConclusion: HTMLElement;
     };
 
-const marginPremises = 20;
-const paddingLR = 20;
-const marginLabelLeft = 10;
-
 const sum = (nums: number[]): number => nums.reduce((acc, x) => acc + x, 0);
 
 const applyStylesToPrtr = (prtrStyle: PrtrStyle) => {
   switch (prtrStyle.type) {
     case "PSAxiom": {
-      prtrStyle.node.style.marginLeft = `${paddingLR}px`;
+      prtrStyle.node.style.width = `${prtrStyle.prtrStyleAux.w}px`;
       return;
     }
     case "PSSequent": {
@@ -426,7 +426,7 @@ const applyStylesToPrtr = (prtrStyle: PrtrStyle) => {
 
 const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
   if (node.classList.contains(BH + "axiom")) {
-    const width = node.offsetWidth + paddingLR * 2;
+    const width = node.offsetWidth + 1 + paddingLR * 2;
     // console.log("axiom", width);
     const prtrStyleAux = {
       w: width,
@@ -453,8 +453,10 @@ const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
     const premises = Array.prototype.slice.apply(nodePremises.children);
 
     const widthC = nodeConclusion.children[0]
-      ? (nodeConclusion.children[0] as HTMLElement).offsetWidth + paddingLR * 2
-      : nodeConclusion.offsetWidth + paddingLR * 2;
+      ? (nodeConclusion.children[0] as HTMLElement).offsetWidth +
+        1 +
+        paddingLR * 2
+      : nodeConclusion.offsetWidth + 1 + paddingLR * 2;
 
     // console.log("widthC", widthC);
     const widthL = nodeLabel.offsetWidth + marginLabelLeft;
