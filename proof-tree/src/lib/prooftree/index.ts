@@ -28,7 +28,7 @@ interface config {
 const maybe = <T>(x: undefined | T, def: T): T => (x === undefined ? def : x);
 
 // Initialize configuration options with default parameters.
-const initConfig = (cfg: configP) => ({
+const initConfig = (cfg: configP): config => ({
   marginPremises: maybe(cfg.marginPremises, 20),
   paddingAxiomConclusion: maybe(cfg.paddingAxiomConclusion, 20),
   marginLabelLeft: maybe(cfg.marginLabelLeft, 10),
