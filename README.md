@@ -2,7 +2,7 @@
 
 A JavaScript engine to render bussproofs style proof tree in html.
 
-![](./demo/demo.png)
+[![](./demo/demo.png)](https://github.com/sano-jin/bussproofs-html)
 
 ## Preliminary
 
@@ -96,6 +96,7 @@ Here comes a proof tree:
 ### VSCode
 
 I'm not familiar with VSCode so I have not yet considered any integration plan.
+Please send me PR if you made any progress.
 
 ## Configration options
 
@@ -155,3 +156,31 @@ yarn build
 cd ..
 cp proof-tree/dist/index.js docs/assets/prooftree.js
 ```
+
+## Roadmap
+
+I have a folloing roadmap.
+Please send me PR if you made any progress.
+
+1. Enable `\LeftLabel`.
+2. Add VSCode integration.
+3. Make the styling process robust.
+   - To style a proof tree,
+     the width of the nodes of the proof tree is obtained after the first HTML rendering.
+   - Currently, we have two options for timing the styling:
+     - A: style after the `load` event or
+     - B: style after user-specified milliseconds
+       after the insertion of the DOM elements of a proof tree.
+   - (B) Styling after user-specified milliseconds is not a robust way
+     since we cannot precisely predict how long does it take to render
+     the inserted DOM elements.
+     If we try to style before the completion of the rendering,
+     we cannot get an expected result.
+   - (A) Styling after `load` event,
+     which is fired after DOM contents are fully rendered
+     in my understanding,
+     is a more robust method and it should work.
+     However, in some cases it seems not to work:
+     e.g., in the integration with markdown-preview.nvim.
+     A deeper and more comprehensive understanding is needed.
+4. Release the first version.
