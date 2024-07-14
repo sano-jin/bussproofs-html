@@ -1,30 +1,30 @@
 console.log("ProofTree v0.0.1");
-const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:20px auto}div.${f}sequent{width:auto;text-align:center}div.${f}premises{width:auto;display:flex;flex-direction:row;gap:20px;align-items:flex-end}div.${f}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${f}horizontal-rule>.${f}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`, X = (t = null) => {
+const f = "bussproofs-html__", N = 20, w = 20, B = 10, v = `div.${f}proof-tree{width:max-content;margin:20px auto}div.${f}sequent{width:auto;text-align:center}div.${f}premises{width:auto;display:flex;flex-direction:row;gap:${N}px;align-items:flex-end}div.${f}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${f}horizontal-rule>.${f}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`, X = (t = null) => {
   console.log(`renderProofTreesOnLoad(${t})`), document.addEventListener("DOMContentLoaded", () => {
-    $(t);
+    I(t);
   });
-}, $ = (t = null) => {
+}, I = (t = null) => {
   console.log(`renderProofTrees(${t})`);
   const e = document.createElement("style");
-  e.innerHTML = B, document.head.appendChild(e), Array.from(
+  e.innerHTML = v, document.head.appendChild(e), Array.from(
     document.body.getElementsByTagName("P")
   ).filter(
     (s) => s.innerHTML.includes("\\begin{prooftree}")
-  ).forEach((s) => N(s, t));
-}, N = (t, e) => {
+  ).forEach((s) => P(s, t));
+}, P = (t, e) => {
   try {
-    const n = v(t);
+    const n = z(t);
     if (!n) throw new Error("cannot find fragment");
-    const o = z(n);
+    const o = H(n);
     if (!o) throw new Error("error: cannot recognise latex command");
-    const s = S(o);
+    const s = M(o);
     if (!s) throw new Error("error: cannot construct proof tree");
     n == null || n.nodeList.slice(1).forEach((l) => {
       var c;
       return (c = l.parentNode) == null ? void 0 : c.removeChild(l);
     });
-    const r = H(s);
-    t.insertBefore(n == null ? void 0 : n.beforeTextNode, n == null ? void 0 : n.nodeList[0]), t.insertBefore(r, n == null ? void 0 : n.nodeList[0]), t.insertBefore(n == null ? void 0 : n.afterTextNode, n == null ? void 0 : n.nodeList[0]), t.removeChild(n == null ? void 0 : n.nodeList[0]), e === null ? window.addEventListener("load", () => C(r), !1) : setTimeout(() => C(r), e), t.innerHTML.includes("\\begin{prooftree}") && N(t, e);
+    const r = R(s);
+    t.insertBefore(n == null ? void 0 : n.beforeTextNode, n == null ? void 0 : n.nodeList[0]), t.insertBefore(r, n == null ? void 0 : n.nodeList[0]), t.insertBefore(n == null ? void 0 : n.afterTextNode, n == null ? void 0 : n.nodeList[0]), t.removeChild(n == null ? void 0 : n.nodeList[0]), e === null ? window.addEventListener("load", () => C(r), !1) : setTimeout(() => C(r), e), t.innerHTML.includes("\\begin{prooftree}") && P(t, e);
   } catch (n) {
     console.error(n);
   }
@@ -41,7 +41,7 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:
   if (n === -1) return null;
   const s = e[o].nodeValue, r = s.slice(0, n), l = s.slice(n + t.length), c = document.createTextNode(r), m = document.createTextNode(l);
   return [o, c, m];
-}, v = (t) => {
+}, z = (t) => {
   const e = Array.from(t.childNodes), n = L("\\begin{prooftree}", e);
   if (n === null) return null;
   const [o, s, r] = n, l = e.slice(o), c = [...l];
@@ -63,16 +63,16 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:
     beforeTextNode: s,
     afterTextNode: d
   };
-}, I = (t) => {
+}, S = (t) => {
   t[0].nodeValue = t[0].nodeValue.trimStart();
-}, P = (t) => {
+}, V = (t) => {
   const e = t[0].nodeValue.indexOf(`
 `);
   if (e !== -1)
     return t[0].nodeValue = t[0].nodeValue.substring(e + 1), !0;
   for (t.shift(); t.length > 0; )
     if (t[0].nodeType !== Node.TEXT_NODE) t.shift();
-    else return P(t);
+    else return V(t);
   return !1;
 }, a = (t, e) => {
   const n = t[0].nodeValue, o = n.indexOf("}");
@@ -85,14 +85,14 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:
       else return a(t, e);
     return null;
   }
-}, z = (t) => {
+}, H = (t) => {
   const e = t.prtrNodeList;
   let n = [], o = 100;
-  for (; e.length > 0 && o-- > 0 && (I(e), e.length !== 0); ) {
+  for (; e.length > 0 && o-- > 0 && (S(e), e.length !== 0); ) {
     if (e[0].nodeType !== Node.TEXT_NODE) return null;
     const s = e[0].nodeValue;
     if (s.startsWith("%")) {
-      if (e[0].nodeValue = s.substring(1), !P(e)) return null;
+      if (e[0].nodeValue = s.substring(1), !V(e)) return null;
     } else if (s.startsWith("\\AXC{")) {
       e[0].nodeValue = s.substring(5);
       const r = a(e, []);
@@ -156,7 +156,7 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:
   o.type === "RightLabel" && (t.shift(), s = o.body);
   const r = [];
   for (let l = 0; l < n; l++) {
-    const c = V(t);
+    const c = E(t);
     if (!c) return null;
     r.push(c);
   }
@@ -166,7 +166,7 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:
     rightLabel: s,
     conclusion: e
   };
-}, V = (t) => {
+}, E = (t) => {
   const e = t.shift();
   if (!e) return null;
   switch (e.type) {
@@ -182,38 +182,38 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:
       return T(t, e.body, 4);
   }
   return null;
-}, S = (t) => {
-  const e = V(t.reverse());
+}, M = (t) => {
+  const e = E(t.reverse());
   return t.length > 0 ? null : e;
 }, g = (t, e) => {
   const n = document.createElement("div");
   return n.classList.add(f + t), (t === "axiom" || t === "right-label" || t === "conclusion") && (n.style.width = "max-content"), e.forEach((o) => n.appendChild(o)), n;
-}, E = (t) => {
+}, W = (t) => {
   switch (t.type) {
     case "Axiom":
       return g("axiom", t.axiom);
     case "Sequent":
       return g("sequent", [
-        g("premises", t.premises.map(E)),
+        g("premises", t.premises.map(W)),
         g("horizontal-rule", [g("right-label", t.rightLabel)]),
         g("conclusion", t.conclusion)
       ]);
   }
-}, H = (t) => g("proof-tree", [E(t)]), M = 20, w = 20, R = 10, q = (t) => t.reduce((e, n) => e + n, 0), W = (t) => {
+}, R = (t) => g("proof-tree", [W(t)]), q = (t) => t.reduce((e, n) => e + n, 0), A = (t) => {
   switch (t.type) {
     case "PSAxiom": {
-      t.node.style.marginLeft = `${w}px`;
+      t.node.style.width = `${t.prtrStyleAux.w}px`;
       return;
     }
     case "PSSequent": {
       const e = t.prtrStyleAux;
-      t.node.style.width = `${e.w}px`, t.nodePremises.style.marginLeft = `${e.mlp}px`, t.nodeHR.style.width = `${e.whr}px`, t.nodeHR.style.marginLeft = `${e.mlhr}px`, t.nodeHR.style.marginRight = `${e.mrhr}px`, t.nodeLabel.style.right = `-${e.widthL}px`, t.nodeConclusion.style.width = `${e.widthC}px`, t.nodeConclusion.style.marginLeft = `${e.mlc}px`, t.premises.forEach(W);
+      t.node.style.width = `${e.w}px`, t.nodePremises.style.marginLeft = `${e.mlp}px`, t.nodeHR.style.width = `${e.whr}px`, t.nodeHR.style.marginLeft = `${e.mlhr}px`, t.nodeHR.style.marginRight = `${e.mrhr}px`, t.nodeLabel.style.right = `-${e.widthL}px`, t.nodeConclusion.style.width = `${e.widthC}px`, t.nodeConclusion.style.marginLeft = `${e.mlc}px`, t.premises.forEach(A);
       return;
     }
   }
-}, A = (t) => {
+}, $ = (t) => {
   if (t.classList.contains(f + "axiom")) {
-    const e = t.offsetWidth + w * 2;
+    const e = t.offsetWidth + 1 + w * 2;
     return {
       type: "PSAxiom",
       prtrStyleAux: {
@@ -230,9 +230,9 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:
       node: t
     };
   } else if (t.classList.contains(f + "sequent")) {
-    const e = t.children[0], n = t.children[1], o = n.children[0], s = t.children[2], r = Array.prototype.slice.apply(e.children), l = s.children[0] ? s.children[0].offsetWidth + w * 2 : s.offsetWidth + w * 2, c = o.offsetWidth + R, m = r.map(A), i = m.map((d) => d.prtrStyleAux);
+    const e = t.children[0], n = t.children[1], o = n.children[0], s = t.children[2], r = Array.prototype.slice.apply(e.children), l = s.children[0] ? s.children[0].offsetWidth + 1 + w * 2 : s.offsetWidth + 1 + w * 2, c = o.offsetWidth + B, m = r.map($), i = m.map((d) => d.prtrStyleAux);
     r.length === 0 && console.error("error: empty premises", r);
-    const u = q(i.map((d) => d.w)) + M * (i.length - 1) - i[0].mlc - i[i.length - 1].mrc;
+    const u = q(i.map((d) => d.w)) + N * (i.length - 1) - i[0].mlc - i[i.length - 1].mrc;
     if (u > l) {
       const d = u, h = i[0].mlc, y = h + (u - l) / 2, p = Math.max(i[i.length - 1].mrc, c), b = p + (u - l) / 2;
       return {
@@ -261,10 +261,10 @@ const f = "bussproofs-html__", B = `div.${f}proof-tree{width:max-content;margin:
   } else
     throw new Error("error");
 }, C = (t) => {
-  const e = A(t.children[0]);
-  W(e);
+  const e = $(t.children[0]);
+  A(e);
 };
 export {
-  $ as renderProofTrees,
+  I as renderProofTrees,
   X as renderProofTreesOnLoad
 };
