@@ -38,7 +38,7 @@ const style = (cfg: config) =>
 
 // Render proof trees on DOMContentLoaded.
 export const renderProofTreesOnLoad = (configP: configP = defaultConfig) => {
-  console.log(`renderProofTreesOnLoad(${configP})`);
+  console.log(`renderProofTreesOnLoad(${JSON.stringify(configP)})`);
   document.addEventListener("DOMContentLoaded", () => {
     renderProofTrees(configP);
   });
@@ -46,7 +46,7 @@ export const renderProofTreesOnLoad = (configP: configP = defaultConfig) => {
 
 // Render proof trees.
 export const renderProofTrees = (configP: configP = defaultConfig) => {
-  console.log(`renderProofTrees(${configP})`);
+  console.log(`renderProofTrees(${JSON.stringify(configP)})`);
   const config = initConfig(configP);
   const styleElem = document.createElement("style");
   styleElem.innerHTML = style(config);

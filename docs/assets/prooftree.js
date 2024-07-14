@@ -10,11 +10,11 @@ const p = "bussproofs-html__", x = {
   marginLabelLeft: t.marginLabelLeft ?? x.marginLabelLeft,
   styleOnLoad: t.styleOnLoad ?? x.styleOnLoad
 }), B = (t) => `div.${p}proof-tree{width:max-content;margin:20px auto}div.${p}sequent{width:auto;text-align:center}div.${p}premises{width:auto;display:flex;flex-direction:row;gap:${t.marginPremises}px;align-items:flex-end}div.${p}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${p}horizontal-rule>.${p}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`, X = (t = x) => {
-  console.log(`renderProofTreesOnLoad(${t})`), document.addEventListener("DOMContentLoaded", () => {
+  console.log(`renderProofTreesOnLoad(${JSON.stringify(t)})`), document.addEventListener("DOMContentLoaded", () => {
     v(t);
   });
 }, v = (t = x) => {
-  console.log(`renderProofTrees(${t})`);
+  console.log(`renderProofTrees(${JSON.stringify(t)})`);
   const e = $(t), n = document.createElement("style");
   n.innerHTML = B(e), document.head.appendChild(n), Array.from(
     document.body.getElementsByTagName("P")
