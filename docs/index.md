@@ -165,7 +165,7 @@ Please send me PR if you made any progress.
 2. Add VSCode integration.
 3. Make the styling process robust.
    - To style a proof tree,
-     the width of the nodes of the proof tree is obtained after the first HTML rendering.
+     the width of the nodes of the proof tree are obtained after the first HTML rendering.
    - Currently, we have two options for timing the styling:
      - A: style after the `load` event or
      - B: style after user-specified milliseconds
