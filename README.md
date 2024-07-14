@@ -104,10 +104,17 @@ to `renderProofTreesOnLoad` and `renderProofTrees`.
 
 ```ts
 interface configP {
-  marginPremises?: number; // the margin between premises in px (default is 20).
-  paddingAxiomConclusion?: number; // the left and right padding of an axiom and conclusion in px (default is 20).
-  marginLabelLeft?: number; // the left margin of a label in px (default is 10).
-  styleOnLoad?: null | number; // when to apply styles; after load (on null) or manually set timeout in milliseconds (on number) (default is null).
+  // the margin between premises (default is 20).
+  marginPremises?: number;
+
+  // the left and right padding of an axiom and conclusion (default is 20).
+  paddingAxiomConclusion?: number;
+
+  // the left margin of a label (default is 10).
+  marginLabelLeft?: number;
+
+  // when to apply styles; after load (on null) or manually set timeout (on number) (default is null).
+  styleOnLoad?: null | number;
 }
 ```
 

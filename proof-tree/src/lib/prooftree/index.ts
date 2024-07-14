@@ -5,10 +5,17 @@ console.log("ProofTree v0.0.1");
 const BH = "bussproofs-html__";
 
 interface configP {
-  marginPremises?: number; // the margin between premises (default is 20).
-  paddingAxiomConclusion?: number; // the left and right padding of an axiom and conclusion (default is 20).
-  marginLabelLeft?: number; // the left margin of a label (default is 10).
-  styleOnLoad?: null | number; // when to apply styles; after load (on null) or manually set timeout (on number) (default is null).
+  // the margin between premises (default is 20).
+  marginPremises?: number;
+
+  // the left and right padding of an axiom and conclusion (default is 20).
+  paddingAxiomConclusion?: number;
+
+  // the left margin of a label (default is 10).
+  marginLabelLeft?: number;
+
+  // when to apply styles; after load (on null) or manually set timeout (on number) (default is null).
+  styleOnLoad?: null | number;
 }
 
 interface config {
@@ -18,27 +25,17 @@ interface config {
   styleOnLoad: null | number;
 }
 
-const defaultConfig: config = {
-  marginPremises: 20,
-  paddingAxiomConclusion: 20,
-  marginLabelLeft: 10,
-  styleOnLoad: null,
-};
-
 const maybe = <T>(x: undefined | T, def: T): T => (x === undefined ? def : x);
 
-const initConfig = (configP: configP) => ({
-  marginPremises: maybe(configP.marginPremises, defaultConfig.marginPremises),
-  paddingAxiomConclusion: maybe(
-    configP.paddingAxiomConclusion,
-    defaultConfig.paddingAxiomConclusion
-  ),
-  marginLabelLeft: maybe(
-    configP.marginLabelLeft,
-    defaultConfig.marginLabelLeft
-  ),
-  styleOnLoad: maybe(configP.styleOnLoad, defaultConfig.styleOnLoad),
+// Initialize configuration options with default parameters.
+const initConfig = (cfg: configP) => ({
+  marginPremises: maybe(cfg.marginPremises, 20),
+  paddingAxiomConclusion: maybe(cfg.paddingAxiomConclusion, 20),
+  marginLabelLeft: maybe(cfg.marginLabelLeft, 10),
+  styleOnLoad: maybe(cfg.styleOnLoad, null),
 });
+
+const defaultConfig = initConfig({});
 
 const style = (cfg: config) =>
   `div.${BH}proof-tree{width:max-content;margin:20px auto}div.${BH}sequent{width:auto;text-align:center}div.${BH}premises{width:auto;display:flex;flex-direction:row;gap:${cfg.marginPremises}px;align-items:flex-end}div.${BH}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${BH}horizontal-rule>.${BH}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`;
