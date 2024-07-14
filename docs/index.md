@@ -96,6 +96,7 @@ Here comes a proof tree:
 ### VSCode
 
 I'm not familiar with VSCode so I have not yet considered any integration plan.
+Please send me PR if you made any progress.
 
 ## Configration options
 
