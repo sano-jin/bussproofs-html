@@ -2,7 +2,7 @@
 
 A JavaScript engine to render bussproofs style proof tree in html.
 
-![](./demo/nvim-preview.gif)
+![](./demo/demo.png)
 
 ## Preliminary
 
@@ -96,6 +96,39 @@ Here comes a proof tree:
 ### VSCode
 
 I'm not familiar with VSCode so I have not yet considered any integration plan.
+
+## Configration options
+
+You can pass configration options `configP`
+to `renderProofTreesOnLoad` and `renderProofTrees`.
+
+```ts
+interface configP {
+  marginPremises?: number; // the margin between premises in px (default is 20).
+  paddingAxiomConclusion?: number; // the left and right padding of an axiom and conclusion in px (default is 20).
+  marginLabelLeft?: number; // the left margin of a label in px (default is 10).
+  styleOnLoad?: null | number; // when to apply styles; after load (on null) or manually set timeout in milliseconds (on number) (default is null).
+}
+```
+
+For example,
+if you specify the configration as follows,
+the margin between premises will be 100px,
+the left and right padding of an axiom and conclusion will be 0px,
+the left margin of a label will be 0px,
+and
+the style will be applied after 100 milliseconds.
+
+```ts
+renderProofTreesOnLoad({
+  marginPremises: 100,
+  paddingAxiomConclusion: 0,
+  marginLabelLeft: 0,
+  styleOnLoad: 100,
+});
+```
+
+![](./demo/custom-config.png)
 
 ## For developpers: how to build
 

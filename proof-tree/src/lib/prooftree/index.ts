@@ -3,23 +3,53 @@
 console.log("ProofTree v0.0.1");
 
 const BH = "bussproofs-html__";
-const marginPremises = 20;
-const paddingLR = 20;
-const marginLabelLeft = 10;
 
-const style = `div.${BH}proof-tree{width:max-content;margin:20px auto}div.${BH}sequent{width:auto;text-align:center}div.${BH}premises{width:auto;display:flex;flex-direction:row;gap:${marginPremises}px;align-items:flex-end}div.${BH}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${BH}horizontal-rule>.${BH}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`;
+interface configP {
+  marginPremises?: number; // the margin between premises (default is 20).
+  paddingAxiomConclusion?: number; // the left and right padding of an axiom and conclusion (default is 20).
+  marginLabelLeft?: number; // the left margin of a label (default is 10).
+  styleOnLoad?: null | number; // when to apply styles; after load (on null) or manually set timeout (on number) (default is null).
+}
 
-export const renderProofTreesOnLoad = (styleOnLoad: null | number = null) => {
-  console.log(`renderProofTreesOnLoad(${styleOnLoad})`);
+interface config {
+  marginPremises: number;
+  paddingAxiomConclusion: number;
+  marginLabelLeft: number;
+  styleOnLoad: null | number;
+}
+
+const defaultConfig: config = {
+  marginPremises: 20,
+  paddingAxiomConclusion: 20,
+  marginLabelLeft: 10,
+  styleOnLoad: null,
+};
+
+const initConfig = (configP: configP) => ({
+  marginPremises: configP.marginPremises ?? defaultConfig.marginPremises,
+  paddingAxiomConclusion:
+    configP.paddingAxiomConclusion ?? defaultConfig.paddingAxiomConclusion,
+  marginLabelLeft: configP.marginLabelLeft ?? defaultConfig.marginLabelLeft,
+  styleOnLoad: configP.styleOnLoad ?? defaultConfig.styleOnLoad,
+});
+
+const style = (cfg: config) =>
+  `div.${BH}proof-tree{width:max-content;margin:20px auto}div.${BH}sequent{width:auto;text-align:center}div.${BH}premises{width:auto;display:flex;flex-direction:row;gap:${cfg.marginPremises}px;align-items:flex-end}div.${BH}horizontal-rule{width:100%;border-bottom:1.3px solid;position:relative}div.${BH}horizontal-rule>.${BH}right-label{position:absolute;height:auto;top:-50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}`;
+
+// Render proof trees on DOMContentLoaded.
+export const renderProofTreesOnLoad = (configP: configP = defaultConfig) => {
+  console.log(`renderProofTreesOnLoad(${configP})`);
   document.addEventListener("DOMContentLoaded", () => {
-    renderProofTrees(styleOnLoad);
+    renderProofTrees(configP);
   });
 };
 
-export const renderProofTrees = (styleOnLoad: null | number = null) => {
-  console.log(`renderProofTrees(${styleOnLoad})`);
+// Render proof trees.
+export const renderProofTrees = (configP: configP = defaultConfig) => {
+  console.log(`renderProofTrees(${configP})`);
+  const config = initConfig(configP);
   const styleElem = document.createElement("style");
-  styleElem.innerHTML = style;
+  styleElem.innerHTML = style(config);
   document.head.appendChild(styleElem);
 
   const nodeArray = Array.from(
@@ -29,10 +59,10 @@ export const renderProofTrees = (styleOnLoad: null | number = null) => {
     node.innerHTML.includes("\\begin{prooftree}")
   );
 
-  nodes.forEach((node) => renderProofTree(node, styleOnLoad));
+  nodes.forEach((node) => renderProofTree(node, config));
 };
 
-const renderProofTree = (node: HTMLElement, styleOnLoad: null | number) => {
+const renderProofTree = (node: HTMLElement, config: config) => {
   try {
     const prtrFragment = getPrtrFragment(node);
     if (!prtrFragment) throw new Error("cannot find fragment");
@@ -50,14 +80,14 @@ const renderProofTree = (node: HTMLElement, styleOnLoad: null | number) => {
     node.insertBefore(prtrFragment?.afterTextNode, prtrFragment?.nodeList[0]);
     node.removeChild(prtrFragment?.nodeList[0]);
 
-    if (styleOnLoad === null) {
-      window.addEventListener("load", () => applyStyles(elem), false);
+    if (config.styleOnLoad === null) {
+      window.addEventListener("load", () => applyStyles(config, elem), false);
     } else {
-      setTimeout(() => applyStyles(elem), styleOnLoad);
+      setTimeout(() => applyStyles(config, elem), config.styleOnLoad);
     }
 
     if (node.innerHTML.includes("\\begin{prooftree}")) {
-      renderProofTree(node, styleOnLoad);
+      renderProofTree(node, config);
     }
   } catch (e) {
     console.error(e);
@@ -310,8 +340,7 @@ const parseProofTreeHelper = (ltxCommands: LtxCommand[]): ProofTree | null => {
   if (!ltxCommand) return null;
   switch (ltxCommand.type) {
     case "AXC": {
-      const axiom = ltxCommand.body;
-      return { type: "Axiom", axiom: axiom };
+      return { type: "Axiom", axiom: ltxCommand.body };
     }
     case "UIC": {
       return parseHelper(ltxCommands, ltxCommand.body, 1);
@@ -334,8 +363,6 @@ const parseProofTree = (ltxCommands: LtxCommand[]): ProofTree | null => {
   if (ltxCommands.length > 0) return null;
   else return result;
 };
-
-// const prootTree: ProofTree | null = parseProofTree(ltxCommands);
 
 const div = (label: string, children: Node[]): HTMLElement => {
   const newDiv = document.createElement("div");
@@ -424,132 +451,147 @@ const applyStylesToPrtr = (prtrStyle: PrtrStyle) => {
   }
 };
 
-const getPrtrStyle = (node: HTMLElement): PrtrStyle => {
-  if (node.classList.contains(BH + "axiom")) {
-    const width = node.offsetWidth + 1 + paddingLR * 2;
-    // console.log("axiom", width);
-    const prtrStyleAux = {
-      w: width,
-      whr: width,
-      mlc: 0,
-      mrc: 0,
-      mlhr: 0,
-      mrhr: 0,
-      widthC: width,
-      widthL: 0,
-      mlp: 0,
-    };
-    const prtrStyle: PrtrStyle = {
-      type: "PSAxiom",
-      prtrStyleAux: prtrStyleAux,
-      node: node,
-    };
-    return prtrStyle;
-  } else if (node.classList.contains(BH + "sequent")) {
-    const nodePremises = node.children[0] as HTMLElement;
-    const nodeHR = node.children[1] as HTMLElement;
-    const nodeLabel = nodeHR.children[0] as HTMLElement;
-    const nodeConclusion = node.children[2] as HTMLElement;
-    const premises = Array.prototype.slice.apply(nodePremises.children);
-
-    const widthC = nodeConclusion.children[0]
-      ? (nodeConclusion.children[0] as HTMLElement).offsetWidth +
-        1 +
-        paddingLR * 2
-      : nodeConclusion.offsetWidth + 1 + paddingLR * 2;
-
-    // console.log("widthC", widthC);
-    const widthL = nodeLabel.offsetWidth + marginLabelLeft;
-
-    const pss = premises.map(getPrtrStyle);
-    const ps = pss.map((p) => p.prtrStyleAux);
-    if (premises.length === 0) {
-      console.error("error: empty premises", premises);
-    }
-
-    // $wpc(D) \triangleq
-    // \sum_{i}^{n} w(P_i) + margin \times (n - 1) - mlc(P_1) - mrc(P_n)$
-    const wpc =
-      sum(ps.map((pi) => pi.w)) +
-      marginPremises * (ps.length - 1) -
-      ps[0].mlc -
-      ps[ps.length - 1].mrc;
-    // console.log("wpc", wpc);
-
-    // $wpc(D) > width(C)$
-    if (wpc > widthC) {
-      // $whr(D) \triangleq wpc(D)$
-      const whr = wpc;
-
-      // $mlhr(D) \triangleq mlc(P_1)$
-      const mlhr = ps[0].mlc;
-
-      // $mlc(D) \triangleq mlhr(D) + \dfrac{wpc(D) - width(C)}{2}$
-      const mlc = mlhr + (wpc - widthC) / 2;
-      // console.log("mlc", mlc);
-
-      // $mrhr(D) \triangleq \max(mrc(P_n), width(L))$
-      const mrhr = Math.max(ps[ps.length - 1].mrc, widthL);
-
-      // $mrc(D) \triangleq mrhr(D) + \dfrac{wpc(D) - width(C)}{2}$
-      const mrc = mrhr + (wpc - widthC) / 2;
-
-      // $w(D) \triangleq whr(D) + mrhr(D) + mrhr(D)$
-      const w = whr + mlhr + mrhr;
-
-      return {
-        type: "PSSequent",
-        prtrStyleAux: { w, whr, mlc, mrc, mlhr, mrhr, widthC, widthL, mlp: 0 },
-        premises: pss,
-        node,
-        nodePremises,
-        nodeHR,
-        nodeLabel,
-        nodeConclusion,
+const getPrtrStyle =
+  (config: config) =>
+  (node: HTMLElement): PrtrStyle => {
+    if (node.classList.contains(BH + "axiom")) {
+      const width = node.offsetWidth + 1 + config.paddingAxiomConclusion * 2;
+      // console.log("axiom", width);
+      const prtrStyleAux = {
+        w: width,
+        whr: width,
+        mlc: 0,
+        mrc: 0,
+        mlhr: 0,
+        mrhr: 0,
+        widthC: width,
+        widthL: 0,
+        mlp: 0,
       };
+      const prtrStyle: PrtrStyle = {
+        type: "PSAxiom",
+        prtrStyleAux: prtrStyleAux,
+        node: node,
+      };
+      return prtrStyle;
+    } else if (node.classList.contains(BH + "sequent")) {
+      const nodePremises = node.children[0] as HTMLElement;
+      const nodeHR = node.children[1] as HTMLElement;
+      const nodeLabel = nodeHR.children[0] as HTMLElement;
+      const nodeConclusion = node.children[2] as HTMLElement;
+      const premises = Array.prototype.slice.apply(nodePremises.children);
+
+      const widthC = nodeConclusion.children[0]
+        ? (nodeConclusion.children[0] as HTMLElement).offsetWidth +
+          1 +
+          config.paddingAxiomConclusion * 2
+        : nodeConclusion.offsetWidth + 1 + config.paddingAxiomConclusion * 2;
+
+      // console.log("widthC", widthC);
+      const widthL = nodeLabel.offsetWidth + config.marginLabelLeft;
+
+      const pss = premises.map(getPrtrStyle(config));
+      const ps = pss.map((p) => p.prtrStyleAux);
+      if (premises.length === 0) {
+        console.error("error: empty premises", premises);
+      }
+
+      // $wpc(D) \triangleq
+      // \sum_{i}^{n} w(P_i) + margin \times (n - 1) - mlc(P_1) - mrc(P_n)$
+      const wpc =
+        sum(ps.map((pi) => pi.w)) +
+        config.marginPremises * (ps.length - 1) -
+        ps[0].mlc -
+        ps[ps.length - 1].mrc;
+      // console.log("wpc", wpc);
+
+      // $wpc(D) > width(C)$
+      if (wpc > widthC) {
+        // $whr(D) \triangleq wpc(D)$
+        const whr = wpc;
+
+        // $mlhr(D) \triangleq mlc(P_1)$
+        const mlhr = ps[0].mlc;
+
+        // $mlc(D) \triangleq mlhr(D) + \dfrac{wpc(D) - width(C)}{2}$
+        const mlc = mlhr + (wpc - widthC) / 2;
+        // console.log("mlc", mlc);
+
+        // $mrhr(D) \triangleq \max(mrc(P_n), width(L))$
+        const mrhr = Math.max(ps[ps.length - 1].mrc, widthL);
+
+        // $mrc(D) \triangleq mrhr(D) + \dfrac{wpc(D) - width(C)}{2}$
+        const mrc = mrhr + (wpc - widthC) / 2;
+
+        // $w(D) \triangleq whr(D) + mrhr(D) + mrhr(D)$
+        const w = whr + mlhr + mrhr;
+
+        return {
+          type: "PSSequent",
+          prtrStyleAux: {
+            w,
+            whr,
+            mlc,
+            mrc,
+            mlhr,
+            mrhr,
+            widthC,
+            widthL,
+            mlp: 0,
+          },
+          premises: pss,
+          node,
+          nodePremises,
+          nodeHR,
+          nodeLabel,
+          nodeConclusion,
+        };
+      } else {
+        // $wpc(D) < width(C)$
+
+        // $whr(D) \triangleq width(C)$
+        const whr = widthC;
+
+        // $mlhr(D) \triangleq mlc(P_1) - \dfrac{width(C) - wpc(D)}{2}$
+        const mlhr = Math.max(ps[0].mlc - (widthC - wpc) / 2, 0);
+        // console.log("mlhr", mlhr);
+
+        const mlp = Math.max((widthC - wpc) / 2 - ps[0].mlc, 0);
+
+        // $mlc(D) \triangleq mlhr(D)$
+        const mlc = mlhr;
+        // console.log("mlc", mlc);
+
+        // $mrhr(D) \triangleq
+        // \max(mrc(P_n) - \dfrac{width(C) - wpc(D)}{2}, width(L))$
+        const mrhr = Math.max(
+          ps[ps.length - 1].mrc - (widthC - wpc) / 2,
+          widthL
+        );
+
+        // $mrc(D) \triangleq mrhr(D)$
+        const mrc = mrhr;
+
+        // $w(D) \triangleq whr(D) + mrhr(D) + mrhr(D)$
+        const w = whr + mlhr + mrhr;
+
+        return {
+          type: "PSSequent",
+          prtrStyleAux: { w, whr, mlc, mrc, mlhr, mrhr, widthC, widthL, mlp },
+          premises: pss,
+          node,
+          nodePremises,
+          nodeHR,
+          nodeLabel,
+          nodeConclusion,
+        };
+      }
     } else {
-      // $wpc(D) < width(C)$
-
-      // $whr(D) \triangleq width(C)$
-      const whr = widthC;
-
-      // $mlhr(D) \triangleq mlc(P_1) - \dfrac{width(C) - wpc(D)}{2}$
-      const mlhr = Math.max(ps[0].mlc - (widthC - wpc) / 2, 0);
-      // console.log("mlhr", mlhr);
-
-      const mlp = Math.max((widthC - wpc) / 2 - ps[0].mlc, 0);
-
-      // $mlc(D) \triangleq mlhr(D)$
-      const mlc = mlhr;
-      // console.log("mlc", mlc);
-
-      // $mrhr(D) \triangleq
-      // \max(mrc(P_n) - \dfrac{width(C) - wpc(D)}{2}, width(L))$
-      const mrhr = Math.max(ps[ps.length - 1].mrc - (widthC - wpc) / 2, widthL);
-
-      // $mrc(D) \triangleq mrhr(D)$
-      const mrc = mrhr;
-
-      // $w(D) \triangleq whr(D) + mrhr(D) + mrhr(D)$
-      const w = whr + mlhr + mrhr;
-
-      return {
-        type: "PSSequent",
-        prtrStyleAux: { w, whr, mlc, mrc, mlhr, mrhr, widthC, widthL, mlp },
-        premises: pss,
-        node,
-        nodePremises,
-        nodeHR,
-        nodeLabel,
-        nodeConclusion,
-      };
+      throw new Error("error");
     }
-  } else {
-    throw new Error("error");
-  }
-};
+  };
 
-const applyStyles = (pt: HTMLElement) => {
-  const prtrStyle = getPrtrStyle(pt.children[0]! as HTMLElement);
+const applyStyles = (config: config, pt: HTMLElement) => {
+  const prtrStyle = getPrtrStyle(config)(pt.children[0]! as HTMLElement);
   applyStylesToPrtr(prtrStyle);
 };
