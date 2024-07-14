@@ -25,12 +25,19 @@ const defaultConfig: config = {
   styleOnLoad: null,
 };
 
+const maybe = <T>(x: undefined | T, def: T): T => (x === undefined ? def : x);
+
 const initConfig = (configP: configP) => ({
-  marginPremises: configP.marginPremises ?? defaultConfig.marginPremises,
-  paddingAxiomConclusion:
-    configP.paddingAxiomConclusion ?? defaultConfig.paddingAxiomConclusion,
-  marginLabelLeft: configP.marginLabelLeft ?? defaultConfig.marginLabelLeft,
-  styleOnLoad: configP.styleOnLoad ?? defaultConfig.styleOnLoad,
+  marginPremises: maybe(configP.marginPremises, defaultConfig.marginPremises),
+  paddingAxiomConclusion: maybe(
+    configP.paddingAxiomConclusion,
+    defaultConfig.paddingAxiomConclusion
+  ),
+  marginLabelLeft: maybe(
+    configP.marginLabelLeft,
+    defaultConfig.marginLabelLeft
+  ),
+  styleOnLoad: maybe(configP.styleOnLoad, defaultConfig.styleOnLoad),
 });
 
 const style = (cfg: config) =>
