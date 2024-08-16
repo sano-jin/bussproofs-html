@@ -4,7 +4,7 @@ A JavaScript engine to render bussproofs style proof tree in html.
 
 [![](./demo/demo.png)](https://github.com/sano-jin/bussproofs-html)
 
-## Preliminary
+## Note
 
 - Only proof trees directly under `p` elements are rendered.
 - Only `\RightLabel` can be used for a label for now.
